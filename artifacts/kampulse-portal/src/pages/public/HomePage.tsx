@@ -29,28 +29,16 @@ export function HomePage() {
         />
         {/* Dark overlay for text legibility */}
         <div className="absolute inset-0 bg-primary/70" />
-        {/* Subtle grid watermark above overlay */}
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M0 40L40 0H20L0 20M40 40V20L20 40" stroke="currentColor" strokeWidth="1" fill="none" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-          </svg>
-        </div>
-
         {/* Content layer */}
         <div className="container mx-auto px-4 relative z-10 py-20 md:py-28">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-3 py-1 text-sm font-medium mb-6">
+            <div className="inline-flex items-center rounded-full bg-primary-foreground/15 px-3 py-1 text-sm font-medium mb-6">
               <span className="flex h-2 w-2 rounded-full bg-green-400 mr-2" />
               Now hiring for multiple roles
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 leading-tight">
               Building Careers.{" "}
-              <span className="text-blue-300">Empowering Businesses.</span>{" "}
+              <span className="text-primary-foreground/80 italic">Empowering Businesses.</span>{" "}
               Driving Innovation.
             </h1>
             <p className="text-lg md:text-xl text-primary-foreground/90 mb-4 leading-relaxed">
@@ -58,7 +46,7 @@ export function HomePage() {
               Nigeria through workforce solutions, technology, business
               innovation, and digital transformation.
             </p>
-            <p className="text-base md:text-lg text-primary-foreground/75 mb-10 leading-relaxed">
+            <p className="text-base md:text-lg text-primary-foreground/90 mb-10 leading-relaxed">
               Whether you're looking for your next career opportunity or you're
               an organization searching for exceptional talent and innovative
               business solutions, we're here to help you grow.
@@ -388,33 +376,23 @@ export function HomePage() {
 
       {/* ── Looking Ahead — Vision ── */}
       <section className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5 pointer-events-none">
-          <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="grid2" width="60" height="60" patternUnits="userSpaceOnUse">
-                <path d="M0 60L60 0H30L0 30M60 60V30L30 60" stroke="currentColor" strokeWidth="1" fill="none" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid2)" />
-          </svg>
-        </div>
-        <div className="container mx-auto px-4 relative z-10 text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-3 py-1 text-sm font-medium mb-8">
+        <div className="container mx-auto px-4 text-center max-w-3xl mx-auto">
+          <div className="inline-flex items-center rounded-full bg-primary-foreground/15 px-3 py-1 text-sm font-medium mb-8">
             Looking Ahead
           </div>
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-tight">
             We're building more than a recruitment company.
           </h2>
-          <p className="text-lg text-primary-foreground/80 mb-8 leading-relaxed">
+          <p className="text-lg text-primary-foreground/95 mb-8 leading-relaxed">
             Our vision is to become one of Africa's leading business solutions
             companies by combining workforce excellence with innovative technology
             that helps businesses grow, creates employment opportunities, and
             improves lives.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-xl font-semibold">
-            <span className="text-primary-foreground/70">Today we recruit talent.</span>
-            <span className="hidden sm:block text-primary-foreground/30">·</span>
-            <span className="text-blue-300">Tomorrow we build the future of work.</span>
+            <span className="text-primary-foreground/90">Today we recruit talent.</span>
+            <span className="hidden sm:block text-primary-foreground/50">·</span>
+            <span className="text-primary-foreground font-bold">Tomorrow we build the future of work.</span>
           </div>
           <div className="mt-10">
             <Link href="/jobs">
