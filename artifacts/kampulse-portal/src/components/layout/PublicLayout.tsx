@@ -105,9 +105,10 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
               <li><Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">Home</Link></li>
               <li><Link href="/jobs" className="text-muted-foreground hover:text-foreground transition-colors">Careers</Link></li>
               <li><Link href="/jobs" className="text-muted-foreground hover:text-foreground transition-colors">Open Positions</Link></li>
-              <li><span className="text-muted-foreground/60 cursor-default">Business Solutions</span></li>
-              <li><span className="text-muted-foreground/60 cursor-default">About Us</span></li>
-              <li><span className="text-muted-foreground/60 cursor-default">Contact</span></li>
+              <li><Link href="/business-solutions" className="text-muted-foreground hover:text-foreground transition-colors">Business Solutions</Link></li>
+              <li><Link href="/about" className="text-muted-foreground hover:text-foreground transition-colors">About Us</Link></li>
+              <li><Link href="/contact" className="text-muted-foreground hover:text-foreground transition-colors">Contact</Link></li>
+              <li><Link href="/disclaimer" className="text-muted-foreground hover:text-foreground transition-colors">Disclaimer</Link></li>
               <li><Link href="/admin/login" className="text-muted-foreground hover:text-foreground transition-colors">Staff Portal</Link></li>
             </ul>
           </div>
@@ -130,13 +131,17 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
           <div>
             <h4 className="font-semibold mb-4 text-sm uppercase tracking-wider">Contact</h4>
             <ul className="space-y-2.5 text-sm text-muted-foreground">
-              <li>Lagos, Nigeria</li>
+              <li>No. 9 Ricardo Oguma Close, Opposite Osubi Airport, Delta State, Nigeria</li>
               <li>
                 <a href="mailto:info@kampulse.com" className="hover:text-foreground transition-colors">
                   info@kampulse.com
                 </a>
               </li>
-              <li>+234 XXX XXX XXXX</li>
+              <li>
+                <a href="tel:+2347040621103" className="hover:text-foreground transition-colors">
+                  +234 704 062 1103
+                </a>
+              </li>
             </ul>
           </div>
         </div>

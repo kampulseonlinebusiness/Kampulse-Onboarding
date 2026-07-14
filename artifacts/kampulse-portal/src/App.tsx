@@ -9,6 +9,10 @@ import { AuthProvider } from '@/hooks/use-auth';
 import { HomePage } from '@/pages/public/HomePage';
 import { JobsPage } from '@/pages/public/JobsPage';
 import { JobDetailPage } from '@/pages/public/JobDetailPage';
+import { AboutPage } from '@/pages/public/AboutPage';
+import { BusinessSolutionsPage } from '@/pages/public/BusinessSolutionsPage';
+import { DisclaimerPage } from '@/pages/public/DisclaimerPage';
+import { ContactPage } from '@/pages/public/ContactPage';
 import { StartApplicationPage } from '@/pages/apply/StartApplicationPage';
 import { ApplicationWizard } from '@/pages/apply/ApplicationWizard';
 import { ApplicationSuccessPage } from '@/pages/apply/ApplicationSuccessPage';
@@ -29,6 +33,10 @@ function Router() {
       <Route path="/" component={HomePage} />
       <Route path="/jobs" component={JobsPage} />
       <Route path="/jobs/:id" component={JobDetailPage} />
+      <Route path="/about" component={AboutPage} />
+      <Route path="/business-solutions" component={BusinessSolutionsPage} />
+      <Route path="/disclaimer" component={DisclaimerPage} />
+      <Route path="/contact" component={ContactPage} />
       <Route path="/apply/start/:jobId" component={StartApplicationPage} />
       <Route path="/apply/success" component={ApplicationSuccessPage} />
       <Route path="/apply/:token" component={ApplicationWizard} />
