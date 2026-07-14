@@ -19,8 +19,17 @@ export function HomePage() {
   return (
     <PublicLayout>
       {/* ── Hero Section ── */}
-      <section className="relative bg-primary text-primary-foreground overflow-hidden">
-        {/* Subtle grid watermark */}
+      <section className="relative text-primary-foreground overflow-hidden min-h-[600px] md:min-h-[700px] flex items-center">
+        {/* Full-bleed background photo */}
+        <img
+          src="/images/hero-handshake.jpg"
+          alt="Professional recruitment handshake in a modern office"
+          loading="eager"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
+        {/* Dark overlay for text legibility */}
+        <div className="absolute inset-0 bg-primary/70" />
+        {/* Subtle grid watermark above overlay */}
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -32,73 +41,46 @@ export function HomePage() {
           </svg>
         </div>
 
-        {/* Mobile: photo banner above text */}
-        <div className="md:hidden relative w-full h-56 overflow-hidden">
-          <img
-            src="/images/hero-handshake.jpg"
-            alt="Professional recruitment handshake"
-            loading="eager"
-            className="w-full h-full object-cover object-center"
-          />
-          {/* Bottom gradient fades into primary */}
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-primary/40 to-primary" />
-        </div>
-
-        {/* Desktop: two-column split */}
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid md:grid-cols-2 gap-0 items-center min-h-[560px] md:min-h-[680px]">
-            {/* Left: copy */}
-            <div className="py-16 md:py-24 md:pr-12">
-              <div className="inline-flex items-center rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-3 py-1 text-sm font-medium mb-6">
-                <span className="flex h-2 w-2 rounded-full bg-green-400 mr-2" />
-                Now hiring for multiple roles
-              </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 leading-tight">
-                Building Careers.{" "}
-                <span className="text-blue-400">Empowering Businesses.</span>{" "}
-                Driving Innovation.
-              </h1>
-              <p className="text-lg md:text-xl text-primary-foreground/80 mb-4 max-w-xl leading-relaxed">
-                Kampulse Handling Solutions Ltd is building the future of work in
-                Nigeria through workforce solutions, technology, business
-                innovation, and digital transformation.
-              </p>
-              <p className="text-base md:text-lg text-primary-foreground/70 mb-10 max-w-xl leading-relaxed">
-                Whether you're looking for your next career opportunity or you're
-                an organization searching for exceptional talent and innovative
-                business solutions, we're here to help you grow.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/jobs">
-                  <Button
-                    size="lg"
-                    className="bg-white text-primary hover:bg-gray-100 font-semibold w-full sm:w-auto"
-                  >
-                    Find Opportunities <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
-                </Link>
-                <Link href="/jobs">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 font-semibold w-full sm:w-auto"
-                  >
-                    View Open Positions
-                  </Button>
-                </Link>
-              </div>
+        {/* Content layer */}
+        <div className="container mx-auto px-4 relative z-10 py-20 md:py-28">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-3 py-1 text-sm font-medium mb-6">
+              <span className="flex h-2 w-2 rounded-full bg-green-400 mr-2" />
+              Now hiring for multiple roles
             </div>
-
-            {/* Right: photo panel — only visible md+ */}
-            <div className="hidden md:block relative h-full self-stretch min-h-[560px] md:min-h-[680px]">
-              <img
-                src="/images/hero-handshake.jpg"
-                alt="Professional recruitment handshake in a modern office"
-                loading="eager"
-                className="absolute inset-0 w-full h-full object-cover object-center"
-              />
-              {/* Left-edge gradient bleeds into primary background */}
-              <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/30 to-transparent" />
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 leading-tight">
+              Building Careers.{" "}
+              <span className="text-blue-300">Empowering Businesses.</span>{" "}
+              Driving Innovation.
+            </h1>
+            <p className="text-lg md:text-xl text-primary-foreground/90 mb-4 leading-relaxed">
+              Kampulse Handling Solutions Ltd is building the future of work in
+              Nigeria through workforce solutions, technology, business
+              innovation, and digital transformation.
+            </p>
+            <p className="text-base md:text-lg text-primary-foreground/75 mb-10 leading-relaxed">
+              Whether you're looking for your next career opportunity or you're
+              an organization searching for exceptional talent and innovative
+              business solutions, we're here to help you grow.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link href="/jobs">
+                <Button
+                  size="lg"
+                  className="bg-white text-primary hover:bg-gray-100 font-semibold w-full sm:w-auto"
+                >
+                  Find Opportunities <ArrowRight className="ml-2 w-4 h-4" />
+                </Button>
+              </Link>
+              <Link href="/jobs">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 font-semibold w-full sm:w-auto"
+                >
+                  View Open Positions
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
