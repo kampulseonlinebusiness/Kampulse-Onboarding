@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Briefcase, Building, Menu, X, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 export function PublicLayout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
@@ -79,6 +80,8 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
       </header>
 
       <main className="flex-1 flex flex-col">{children}</main>
+
+      <WhatsAppButton />
 
       <footer className="border-t bg-background/70 backdrop-blur py-12 mt-auto">
         <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-10">
