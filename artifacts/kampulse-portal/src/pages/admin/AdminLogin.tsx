@@ -8,7 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Building, Loader2 } from "lucide-react";
+import { Building, Loader2, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
@@ -63,7 +63,11 @@ export function AdminLogin() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted/30 px-4">
-      <div className="w-full max-w-md bg-card border rounded-2xl shadow-xl overflow-hidden">
+      <div className="w-full max-w-md">
+        <a href="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors">
+          <ArrowLeft className="w-4 h-4" /> Back to Homepage
+        </a>
+      <div className="bg-card border rounded-2xl shadow-xl overflow-hidden">
         <div className="p-8 text-center border-b bg-muted/10">
           <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-primary-foreground mx-auto mb-4 shadow-sm">
             <Building className="w-6 h-6" />
@@ -110,6 +114,7 @@ export function AdminLogin() {
             </form>
           </Form>
         </div>
+      </div>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import express from "express";
 import path from "path";
 import fs from "fs";
 import { db } from "@workspace/db";
@@ -19,25 +20,10 @@ const VALID_FILE_TYPES = [
   "medical", "guarantor_passport", "guarantor_id",
 ];
 
-// Serve uploaded files statically
-router.get("/uploads/files/{*splat}", (req, res): void => {
-  const splat = Array.isArray(req.params.splat) ? req.params.splat[0] : req.params.splat;
-  if (!splat) {
-    res.status(400).json({ error: "Invalid path" });
-    return;
-  }
-  const filePath = path.join(UPLOAD_BASE, splat);
-  // Prevent directory traversal
-  if (!filePath.startsWith(UPLOAD_BASE)) {
-    res.status(403).json({ error: "Forbidden" });
-    return;
-  }
-  if (!fs.existsSync(filePath)) {
-    res.status(404).json({ error: "File not found" });
-    return;
-  }
-  res.sendFile(filePath);
-});
+// Serve uploaded files statically.
+// express.static handles path traversal protection and correct MIME types.
+// Must be registered before the admin router's global requireAuth middleware.
+router.use("/uploads/files", express.static(UPLOAD_BASE, { fallthrough: false }));
 
 // Upload document
 router.post("/uploads/:token", async (req, res): Promise<void> => {
