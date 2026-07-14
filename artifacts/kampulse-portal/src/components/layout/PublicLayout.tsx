@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useLocation } from "wouter";
 import { Briefcase, Building, Menu, X, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 export function PublicLayout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
@@ -13,8 +14,8 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-background font-sans">
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="min-h-screen flex flex-col font-sans">
+      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">
             <div className="w-8 h-8 bg-primary rounded flex items-center justify-center text-primary-foreground group-hover:scale-105 transition-transform">
@@ -43,6 +44,7 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
                 Apply Now <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
+            <ThemeToggle className="text-muted-foreground hover:text-foreground" />
           </nav>
 
           {/* Mobile Toggle */}
@@ -56,7 +58,7 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
 
         {/* Mobile Nav */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-border bg-background px-4 py-4 space-y-4">
+          <div className="md:hidden border-t border-border bg-background/90 backdrop-blur px-4 py-4 space-y-4">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -78,7 +80,7 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
 
       <main className="flex-1 flex flex-col">{children}</main>
 
-      <footer className="border-t bg-muted/40 py-12 mt-auto">
+      <footer className="border-t bg-background/70 backdrop-blur py-12 mt-auto">
         <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Brand column */}
           <div className="md:col-span-1">

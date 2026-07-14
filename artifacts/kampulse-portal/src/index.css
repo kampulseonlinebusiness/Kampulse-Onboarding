@@ -218,8 +218,26 @@
     @apply border-border;
   }
 
+  html {
+    background-image: url('/images/bg-texture.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: center top;
+    min-height: 100%;
+  }
+
+  /* In dark mode, dim the texture so it doesn't clash */
+  html.dark {
+    background-image:
+      linear-gradient(rgba(17, 24, 39, 0.92), rgba(17, 24, 39, 0.92)),
+      url('/images/bg-texture.jpg');
+  }
+
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased text-foreground;
+    background: transparent;
+    min-height: 100vh;
   }
 }
 

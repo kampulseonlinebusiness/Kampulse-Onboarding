@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { useGetMe, useAdminLogout, getGetMeQueryKey } from "@workspace/api-client-react";
 import { Building, LayoutDashboard, Users, LogOut, Menu, X, Briefcase, KeyRound } from "lucide-react";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { Button } from "@/components/ui/button";
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -53,9 +54,9 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-muted/30">
+    <div className="min-h-screen flex flex-col md:flex-row">
       {/* Mobile Header */}
-      <div className="md:hidden flex items-center justify-between p-4 bg-sidebar border-b border-sidebar-border text-sidebar-foreground">
+      <div className="md:hidden flex items-center justify-between p-4 bg-sidebar/90 backdrop-blur border-b border-sidebar-border text-sidebar-foreground">
         <div className="flex items-center gap-2 font-bold text-lg">
           <Building className="w-5 h-5 text-primary" />
           Kampulse Admin
@@ -69,7 +70,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       <aside
         className={`${
           mobileMenuOpen ? "block" : "hidden"
-        } md:block w-full md:w-64 bg-sidebar border-r border-sidebar-border text-sidebar-foreground flex flex-col`}
+        } md:block w-full md:w-64 bg-sidebar/90 backdrop-blur border-r border-sidebar-border text-sidebar-foreground flex flex-col`}
       >
         <div className="hidden md:flex p-6 items-center gap-2 font-bold text-xl border-b border-sidebar-border/50">
           <div className="w-8 h-8 bg-primary rounded flex items-center justify-center text-primary-foreground">
@@ -121,6 +122,10 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
             <KeyRound className="w-4 h-4" />
             Change Password
           </Link>
+          <div className="flex items-center gap-1 px-1 mt-1">
+            <ThemeToggle className="text-sidebar-foreground/70 hover:text-sidebar-foreground flex-1 justify-start" />
+            <span className="text-xs text-sidebar-foreground/50 flex-1">Theme</span>
+          </div>
           <Button
             variant="ghost"
             className="w-full justify-start text-sidebar-foreground/70 hover:text-destructive hover:bg-destructive/10"
@@ -135,7 +140,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <div className="flex-1 overflow-auto p-4 md:p-8">{children}</div>
+        <div className="flex-1 overflow-auto p-4 md:p-8 bg-background/60 backdrop-blur-sm">{children}</div>
       </main>
     </div>
   );
