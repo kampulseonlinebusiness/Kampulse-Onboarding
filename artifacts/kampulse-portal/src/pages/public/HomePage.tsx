@@ -55,7 +55,7 @@ export function HomePage() {
               <Link href="/jobs">
                 <Button
                   size="lg"
-                  className="bg-white text-primary hover:bg-gray-100 font-semibold w-full sm:w-auto"
+                  className="bg-white text-gray-900 hover:bg-white/90 font-semibold w-full sm:w-auto"
                 >
                   Find Opportunities <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
@@ -363,7 +363,7 @@ export function HomePage() {
               </div>
               <div className="text-center">
                 <Link href="/jobs">
-                  <Button size="lg" className="bg-white text-primary hover:bg-gray-100 font-semibold gap-2">
+                  <Button size="lg" className="bg-white text-gray-900 hover:bg-white/90 font-semibold gap-2">
                     View All Open Positions <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
@@ -372,7 +372,7 @@ export function HomePage() {
           ) : (
             <div className="text-center py-10">
               <Link href="/jobs">
-                <Button size="lg" className="bg-white text-primary hover:bg-gray-100 font-semibold gap-2">
+                <Button size="lg" className="bg-white text-gray-900 hover:bg-white/90 font-semibold gap-2">
                   View All Open Positions <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
@@ -403,7 +403,7 @@ export function HomePage() {
           </div>
           <div className="mt-10">
             <Link href="/jobs">
-              <Button size="lg" className="bg-white text-primary hover:bg-gray-100 font-semibold">
+              <Button size="lg" className="bg-white text-gray-900 hover:bg-white/90 font-semibold">
                 Join Us Today <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </Link>
