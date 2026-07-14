@@ -5,12 +5,13 @@
  * Kampulse Recruitment & Employee Onboarding Portal API
  * OpenAPI spec version: 0.1.0
  */
+import type { PersonalInfoInputComputerLiteracy } from './personalInfoInputComputerLiteracy';
 import type { PersonalInfoInputGender } from './personalInfoInputGender';
 import type { PersonalInfoInputMaritalStatus } from './personalInfoInputMaritalStatus';
 
 export interface PersonalInfoInput {
   fullName: string;
-  dateOfBirth: Date;
+  dateOfBirth: string;
   gender: PersonalInfoInputGender;
   nationality: string;
   stateOfOrigin: string;
@@ -27,4 +28,5 @@ export interface PersonalInfoInput {
   emergencyContactRelationship: string;
   emergencyContactPhone: string;
   emergencyContactAddress: string;
+  computerLiteracy?: PersonalInfoInputComputerLiteracy;
 }

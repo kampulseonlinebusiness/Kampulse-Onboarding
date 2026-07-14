@@ -21,15 +21,14 @@ export function AdminApplications() {
     return () => clearTimeout(timer);
   }, [search]);
 
-  const { data, isLoading } = useListAdminApplications({
-    query: {
-      queryKey: ["adminApplications", statusFilter, debouncedSearch],
-    },
-    request: {
-      // Pass params manually as query params if generated hook expects it differently,
-      // but Orval puts them in the fetch URL automatically if defined in the schema.
+  const { data, isLoading } = useListAdminApplications(
+    statusFilter !== "all" ? { status: statusFilter as any } : {},
+    {
+      query: {
+        queryKey: ["adminApplications", statusFilter, debouncedSearch],
+      },
     }
-  });
+  );
 
   // Client-side filtering if API doesn't fully support it yet
   const filteredApps = data?.applications?.filter(app => {

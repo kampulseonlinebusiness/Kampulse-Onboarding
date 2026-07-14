@@ -47,8 +47,9 @@ export function AdminLogin() {
           refreshToken: res.refreshToken,
           user: res.user,
         });
+        // Navigation is handled by the useEffect watching isAuthenticated above,
+        // which fires after React commits the state update from login().
         toast({ title: "Login Successful", description: "Welcome back." });
-        setLocation("/admin/dashboard");
       },
       onError: (err: any) => {
         toast({

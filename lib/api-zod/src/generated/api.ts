@@ -75,6 +75,97 @@ export const GetMeResponse = zod.object({
 
 
 /**
+ * @summary Change own password
+ */
+export const ChangePasswordBody = zod.object({
+  "currentPassword": zod.string(),
+  "newPassword": zod.string()
+})
+
+export const ChangePasswordResponse = zod.object({
+  "message": zod.string()
+})
+
+
+/**
+ * @summary List all jobs (any status)
+ */
+export const ListAdminJobsResponseItem = zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "location": zod.string(),
+  "salary": zod.string(),
+  "workingHours": zod.string(),
+  "transportAllowance": zod.string().nullish(),
+  "overtime": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.enum(['active', 'closed']),
+  "createdAt": zod.coerce.date().optional()
+})
+export const ListAdminJobsResponse = zod.array(ListAdminJobsResponseItem)
+
+
+/**
+ * @summary Create a new job
+ */
+export const CreateAdminJobBody = zod.object({
+  "title": zod.string(),
+  "location": zod.string(),
+  "salary": zod.string(),
+  "workingHours": zod.string(),
+  "transportAllowance": zod.string().optional(),
+  "overtime": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.enum(['active', 'closed'])
+})
+
+export const CreateAdminJobResponse = zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "location": zod.string(),
+  "salary": zod.string(),
+  "workingHours": zod.string(),
+  "transportAllowance": zod.string().nullish(),
+  "overtime": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.enum(['active', 'closed']),
+  "createdAt": zod.coerce.date().optional()
+})
+
+
+/**
+ * @summary Update a job
+ */
+export const UpdateAdminJobParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateAdminJobBody = zod.object({
+  "title": zod.string(),
+  "location": zod.string(),
+  "salary": zod.string(),
+  "workingHours": zod.string(),
+  "transportAllowance": zod.string().optional(),
+  "overtime": zod.string().optional(),
+  "description": zod.string().optional(),
+  "status": zod.enum(['active', 'closed'])
+})
+
+export const UpdateAdminJobResponse = zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "location": zod.string(),
+  "salary": zod.string(),
+  "workingHours": zod.string(),
+  "transportAllowance": zod.string().nullish(),
+  "overtime": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.enum(['active', 'closed']),
+  "createdAt": zod.coerce.date().optional()
+})
+
+
+/**
  * @summary List all active jobs
  */
 export const ListJobsResponseItem = zod.object({
@@ -118,7 +209,7 @@ export const GetJobResponse = zod.object({
  */
 export const StartApplicationBody = zod.object({
   "jobId": zod.number(),
-  "expectedStartDate": zod.coerce.date(),
+  "expectedStartDate": zod.string(),
   "applicationSource": zod.string(),
   "coverLetter": zod.string()
 })
@@ -208,7 +299,7 @@ export const SavePersonalInfoParams = zod.object({
 
 export const SavePersonalInfoBody = zod.object({
   "fullName": zod.string(),
-  "dateOfBirth": zod.coerce.date(),
+  "dateOfBirth": zod.string(),
   "gender": zod.enum(['male', 'female', 'other']),
   "nationality": zod.string(),
   "stateOfOrigin": zod.string(),
@@ -224,7 +315,8 @@ export const SavePersonalInfoBody = zod.object({
   "emergencyContactName": zod.string(),
   "emergencyContactRelationship": zod.string(),
   "emergencyContactPhone": zod.string(),
-  "emergencyContactAddress": zod.string()
+  "emergencyContactAddress": zod.string(),
+  "computerLiteracy": zod.enum(['proficient', 'basic', 'none']).optional()
 })
 
 export const SavePersonalInfoResponse = zod.object({
@@ -307,8 +399,8 @@ export const SaveGuarantorInfoBody = zod.object({
   "guarantorYearsKnown": zod.number(),
   "guarantorIdType": zod.string(),
   "guarantorIdNumber": zod.string(),
-  "guarantorIdIssueDate": zod.coerce.date(),
-  "guarantorIdExpiryDate": zod.coerce.date(),
+  "guarantorIdIssueDate": zod.string(),
+  "guarantorIdExpiryDate": zod.string(),
   "witnessName": zod.string(),
   "witnessAddress": zod.string(),
   "witnessPhone": zod.string(),

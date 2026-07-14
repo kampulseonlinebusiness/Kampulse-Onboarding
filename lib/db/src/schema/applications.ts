@@ -36,6 +36,8 @@ export const applicationsTable = pgTable("applications", {
   emergencyContactRelationship: text("emergency_contact_relationship"),
   emergencyContactPhone: text("emergency_contact_phone"),
   emergencyContactAddress: text("emergency_contact_address"),
+  // Computer Literacy
+  computerLiteracy: text("computer_literacy"),
   // Step 4 - Guarantor
   guarantorFullName: text("guarantor_full_name"),
   guarantorAddress: text("guarantor_address"),

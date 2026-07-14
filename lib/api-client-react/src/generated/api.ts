@@ -21,6 +21,7 @@ import type {
 
 import type {
   ActivityItem,
+  AdminJobInput,
   AdminNote,
   AdminNoteInput,
   AdminStats,
@@ -34,6 +35,7 @@ import type {
   ApplicationStatusInput,
   ApplicationToken,
   AuthResponse,
+  ChangePasswordInput,
   ErrorResponse,
   GetRecentActivityParams,
   GuarantorInfoInput,
@@ -440,6 +442,297 @@ export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = Err
 
 
 
+
+export const getChangePasswordUrl = () => {
+
+
+
+
+  return `/api/auth/change-password`
+}
+
+/**
+ * @summary Change own password
+ */
+export const changePassword = async (changePasswordInput: ChangePasswordInput, options?: RequestInit): Promise<MessageResponse> => {
+
+  return customFetch<MessageResponse>(getChangePasswordUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(changePasswordInput)
+  }
+);}
+
+
+
+
+
+export const getChangePasswordMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changePassword>>, TError,{data: BodyType<ChangePasswordInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof changePassword>>, TError,{data: BodyType<ChangePasswordInput>}, TContext> => {
+
+const mutationKey = ['changePassword'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof changePassword>>, {data: BodyType<ChangePasswordInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  changePassword(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ChangePasswordMutationResult = NonNullable<Awaited<ReturnType<typeof changePassword>>>
+    export type ChangePasswordMutationBody = BodyType<ChangePasswordInput>
+    export type ChangePasswordMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Change own password
+ */
+export const useChangePassword = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changePassword>>, TError,{data: BodyType<ChangePasswordInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof changePassword>>,
+        TError,
+        {data: BodyType<ChangePasswordInput>},
+        TContext
+      > => {
+      return useMutation(getChangePasswordMutationOptions(options));
+    }
+
+export const getListAdminJobsUrl = () => {
+
+
+
+
+  return `/api/admin/jobs`
+}
+
+/**
+ * @summary List all jobs (any status)
+ */
+export const listAdminJobs = async ( options?: RequestInit): Promise<Job[]> => {
+
+  return customFetch<Job[]>(getListAdminJobsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListAdminJobsQueryKey = () => {
+    return [
+    `/api/admin/jobs`
+    ] as const;
+    }
+
+
+export const getListAdminJobsQueryOptions = <TData = Awaited<ReturnType<typeof listAdminJobs>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAdminJobs>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAdminJobsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAdminJobs>>> = ({ signal }) => listAdminJobs({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAdminJobs>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListAdminJobsQueryResult = NonNullable<Awaited<ReturnType<typeof listAdminJobs>>>
+export type ListAdminJobsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List all jobs (any status)
+ */
+
+export function useListAdminJobs<TData = Awaited<ReturnType<typeof listAdminJobs>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAdminJobs>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListAdminJobsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateAdminJobUrl = () => {
+
+
+
+
+  return `/api/admin/jobs`
+}
+
+/**
+ * @summary Create a new job
+ */
+export const createAdminJob = async (adminJobInput: AdminJobInput, options?: RequestInit): Promise<Job> => {
+
+  return customFetch<Job>(getCreateAdminJobUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(adminJobInput)
+  }
+);}
+
+
+
+
+
+export const getCreateAdminJobMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createAdminJob>>, TError,{data: BodyType<AdminJobInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createAdminJob>>, TError,{data: BodyType<AdminJobInput>}, TContext> => {
+
+const mutationKey = ['createAdminJob'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createAdminJob>>, {data: BodyType<AdminJobInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createAdminJob(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateAdminJobMutationResult = NonNullable<Awaited<ReturnType<typeof createAdminJob>>>
+    export type CreateAdminJobMutationBody = BodyType<AdminJobInput>
+    export type CreateAdminJobMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Create a new job
+ */
+export const useCreateAdminJob = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createAdminJob>>, TError,{data: BodyType<AdminJobInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createAdminJob>>,
+        TError,
+        {data: BodyType<AdminJobInput>},
+        TContext
+      > => {
+      return useMutation(getCreateAdminJobMutationOptions(options));
+    }
+
+export const getUpdateAdminJobUrl = (id: number,) => {
+
+
+
+
+  return `/api/admin/jobs/${id}`
+}
+
+/**
+ * @summary Update a job
+ */
+export const updateAdminJob = async (id: number,
+    adminJobInput: AdminJobInput, options?: RequestInit): Promise<Job> => {
+
+  return customFetch<Job>(getUpdateAdminJobUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(adminJobInput)
+  }
+);}
+
+
+
+
+
+export const getUpdateAdminJobMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateAdminJob>>, TError,{id: number;data: BodyType<AdminJobInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateAdminJob>>, TError,{id: number;data: BodyType<AdminJobInput>}, TContext> => {
+
+const mutationKey = ['updateAdminJob'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateAdminJob>>, {id: number;data: BodyType<AdminJobInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateAdminJob(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateAdminJobMutationResult = NonNullable<Awaited<ReturnType<typeof updateAdminJob>>>
+    export type UpdateAdminJobMutationBody = BodyType<AdminJobInput>
+    export type UpdateAdminJobMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Update a job
+ */
+export const useUpdateAdminJob = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateAdminJob>>, TError,{id: number;data: BodyType<AdminJobInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateAdminJob>>,
+        TError,
+        {id: number;data: BodyType<AdminJobInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateAdminJobMutationOptions(options));
+    }
 
 export const getListJobsUrl = () => {
 

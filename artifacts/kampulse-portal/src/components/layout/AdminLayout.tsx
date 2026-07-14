@@ -1,18 +1,19 @@
 import React, { useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
-import { useGetMe, useAdminLogout } from "@workspace/api-client-react";
-import { Building, LayoutDashboard, Users, LogOut, Menu, X } from "lucide-react";
+import { useGetMe, useAdminLogout, getGetMeQueryKey } from "@workspace/api-client-react";
+import { Building, LayoutDashboard, Users, LogOut, Menu, X, Briefcase, KeyRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, logout, user } = useAuth();
+  const { isAuthenticated, isLoading, logout, user } = useAuth();
   const [, setLocation] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [location] = useLocation();
 
   const { error } = useGetMe({
     query: {
+      queryKey: getGetMeQueryKey(),
       enabled: isAuthenticated,
       retry: false,
     },
@@ -21,10 +22,11 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   const logoutMutation = useAdminLogout();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    // Only redirect once auth state has finished loading from localStorage
+    if (!isLoading && !isAuthenticated) {
       setLocation("/admin/login");
     }
-  }, [isAuthenticated, setLocation]);
+  }, [isAuthenticated, isLoading, setLocation]);
 
   useEffect(() => {
     if (error && (error as any).status === 401) {
@@ -42,11 +44,12 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
     });
   };
 
-  if (!isAuthenticated) return null;
+  if (isLoading || !isAuthenticated) return null;
 
   const navLinks = [
     { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/applications", label: "Applications", icon: Users },
+    { href: "/admin/jobs", label: "Job Vacancies", icon: Briefcase },
   ];
 
   return (
@@ -110,6 +113,14 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
               <div className="text-xs text-sidebar-foreground/60 truncate">{user?.role}</div>
             </div>
           </div>
+          <Link
+            href="/admin/change-password"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors"
+          >
+            <KeyRound className="w-4 h-4" />
+            Change Password
+          </Link>
           <Button
             variant="ghost"
             className="w-full justify-start text-sidebar-foreground/70 hover:text-destructive hover:bg-destructive/10"

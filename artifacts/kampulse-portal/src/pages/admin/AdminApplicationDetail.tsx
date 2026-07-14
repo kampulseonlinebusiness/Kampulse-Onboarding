@@ -211,6 +211,15 @@ export function AdminApplicationDetail() {
                         <div><p className="text-sm text-muted-foreground">Nationality</p><p className="font-medium">{app.personalInfo?.nationality}</p></div>
                         <div><p className="text-sm text-muted-foreground">State of Origin</p><p className="font-medium">{app.personalInfo?.stateOfOrigin}</p></div>
                         <div><p className="text-sm text-muted-foreground">LGA</p><p className="font-medium">{app.personalInfo?.lga}</p></div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">Computer Literacy</p>
+                          <p className="font-medium capitalize">
+                            {(app.personalInfo as any)?.computerLiteracy === "proficient" ? "Yes — Proficient"
+                              : (app.personalInfo as any)?.computerLiteracy === "basic" ? "Yes — Basic Knowledge"
+                              : (app.personalInfo as any)?.computerLiteracy === "none" ? "No — Not computer literate"
+                              : "Not specified"}
+                          </p>
+                        </div>
                       </div>
                     </div>
 

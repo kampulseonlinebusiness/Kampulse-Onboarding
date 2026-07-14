@@ -8,7 +8,7 @@ import { format } from "date-fns";
 
 export function AdminDashboard() {
   const { data: stats, isLoading: statsLoading } = useGetAdminStats();
-  const { data: activity, isLoading: activityLoading } = useGetRecentActivity({ query: { limit: 10 } });
+  const { data: activity, isLoading: activityLoading } = useGetRecentActivity({ limit: 10 });
 
   return (
     <AdminLayout>

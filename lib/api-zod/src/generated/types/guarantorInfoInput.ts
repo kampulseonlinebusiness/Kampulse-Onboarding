@@ -17,8 +17,8 @@ export interface GuarantorInfoInput {
   guarantorYearsKnown: number;
   guarantorIdType: string;
   guarantorIdNumber: string;
-  guarantorIdIssueDate: Date;
-  guarantorIdExpiryDate: Date;
+  guarantorIdIssueDate: string;
+  guarantorIdExpiryDate: string;
   witnessName: string;
   witnessAddress: string;
   witnessPhone: string;

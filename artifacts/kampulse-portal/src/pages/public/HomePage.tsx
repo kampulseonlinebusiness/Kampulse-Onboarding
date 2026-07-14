@@ -213,6 +213,20 @@ export function HomePage() {
           </div>
         </section>
       )}
+      {/* Footer */}
+      <footer className="border-t py-6 bg-background">
+        <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-xs text-muted-foreground">
+            &copy; {new Date().getFullYear()} Kampulse Handling Solutions Ltd. All rights reserved.
+          </p>
+          <Link
+            href="/admin/login"
+            className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+          >
+            Staff Portal
+          </Link>
+        </div>
+      </footer>
     </PublicLayout>
   );
 }

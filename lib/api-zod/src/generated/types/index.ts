@@ -7,6 +7,8 @@
  */
 
 export * from './activityItem';
+export * from './adminJobInput';
+export * from './adminJobInputStatus';
 export * from './adminNote';
 export * from './adminNoteInput';
 export * from './adminStats';
@@ -27,6 +29,7 @@ export * from './applicationSummary';
 export * from './applicationSummaryStatus';
 export * from './applicationToken';
 export * from './authResponse';
+export * from './changePasswordInput';
 export * from './documentData';
 export * from './errorResponse';
 export * from './getRecentActivityParams';
@@ -42,6 +45,7 @@ export * from './messageResponse';
 export * from './pdfResponse';
 export * from './personalInfoData';
 export * from './personalInfoInput';
+export * from './personalInfoInputComputerLiteracy';
 export * from './personalInfoInputGender';
 export * from './personalInfoInputMaritalStatus';
 export * from './refreshTokenInput';

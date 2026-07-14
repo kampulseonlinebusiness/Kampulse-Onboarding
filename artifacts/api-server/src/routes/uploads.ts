@@ -22,6 +22,10 @@ const VALID_FILE_TYPES = [
 // Serve uploaded files statically
 router.get("/uploads/files/{*splat}", (req, res): void => {
   const splat = Array.isArray(req.params.splat) ? req.params.splat[0] : req.params.splat;
+  if (!splat) {
+    res.status(400).json({ error: "Invalid path" });
+    return;
+  }
   const filePath = path.join(UPLOAD_BASE, splat);
   // Prevent directory traversal
   if (!filePath.startsWith(UPLOAD_BASE)) {

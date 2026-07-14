@@ -15,6 +15,8 @@ import { AdminLogin } from '@/pages/admin/AdminLogin';
 import { AdminDashboard } from '@/pages/admin/AdminDashboard';
 import { AdminApplications } from '@/pages/admin/AdminApplications';
 import { AdminApplicationDetail } from '@/pages/admin/AdminApplicationDetail';
+import { AdminJobs } from '@/pages/admin/AdminJobs';
+import { AdminChangePassword } from '@/pages/admin/AdminChangePassword';
 
 const queryClient = new QueryClient();
 
@@ -35,6 +37,8 @@ function Router() {
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/admin/applications" component={AdminApplications} />
       <Route path="/admin/applications/:id" component={AdminApplicationDetail} />
+      <Route path="/admin/jobs" component={AdminJobs} />
+      <Route path="/admin/change-password" component={AdminChangePassword} />
       
       <Route component={NotFound} />
     </Switch>

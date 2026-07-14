@@ -118,6 +118,95 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /auth/change-password:
+    post:
+      operationId: changePassword
+      tags: [auth]
+      summary: Change own password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordInput"
+      responses:
+        "200":
+          description: Password changed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "400":
+          description: Invalid current password
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ADMIN JOB MANAGEMENT
+  /admin/jobs:
+    get:
+      operationId: listAdminJobs
+      tags: [admin]
+      summary: List all jobs (any status)
+      responses:
+        "200":
+          description: List of jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Job"
+    post:
+      operationId: createAdminJob
+      tags: [admin]
+      summary: Create a new job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminJobInput"
+      responses:
+        "201":
+          description: Job created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+
+  /admin/jobs/{id}:
+    patch:
+      operationId: updateAdminJob
+      tags: [admin]
+      summary: Update a job
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminJobInput"
+      responses:
+        "200":
+          description: Job updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+        "404":
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   # JOBS
   /jobs:
     get:
@@ -690,6 +779,37 @@ components:
           type: string
           enum: [super_admin, admin, hr]
 
+    ChangePasswordInput:
+      type: object
+      required: [currentPassword, newPassword]
+      properties:
+        currentPassword:
+          type: string
+        newPassword:
+          type: string
+
+    AdminJobInput:
+      type: object
+      required: [title, location, salary, workingHours, status]
+      properties:
+        title:
+          type: string
+        location:
+          type: string
+        salary:
+          type: string
+        workingHours:
+          type: string
+        transportAllowance:
+          type: string
+        overtime:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [active, closed]
+
     # JOB SCHEMAS
     Job:
       type: object
@@ -727,7 +847,6 @@ components:
           type: integer
         expectedStartDate:
           type: string
-          format: date
         applicationSource:
           type: string
         coverLetter:
@@ -752,7 +871,6 @@ components:
           type: string
         dateOfBirth:
           type: string
-          format: date
         gender:
           type: string
           enum: [male, female, other]
@@ -787,6 +905,9 @@ components:
           type: string
         emergencyContactAddress:
           type: string
+        computerLiteracy:
+          type: string
+          enum: [proficient, basic, none]
 
     GuarantorInfoInput:
       type: object
@@ -814,10 +935,8 @@ components:
           type: string
         guarantorIdIssueDate:
           type: string
-          format: date
         guarantorIdExpiryDate:
           type: string
-          format: date
         witnessName:
           type: string
         witnessAddress:

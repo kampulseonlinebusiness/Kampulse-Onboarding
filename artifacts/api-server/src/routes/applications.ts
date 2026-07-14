@@ -48,6 +48,7 @@ function buildApplicationResume(app: typeof applicationsTable.$inferSelect & { j
       emergencyContactRelationship: app.emergencyContactRelationship,
       emergencyContactPhone: app.emergencyContactPhone,
       emergencyContactAddress: app.emergencyContactAddress,
+      computerLiteracy: app.computerLiteracy,
     },
     documents: docs.map(d => ({
       id: d.id,
@@ -169,6 +170,7 @@ router.patch("/applications/:token/personal", async (req, res): Promise<void> =>
     emergencyContactRelationship: d.emergencyContactRelationship,
     emergencyContactPhone: d.emergencyContactPhone,
     emergencyContactAddress: d.emergencyContactAddress,
+    computerLiteracy: d.computerLiteracy ?? null,
     currentStep: Math.max(application.currentStep, 3),
   }).where(eq(applicationsTable.token, params.data.token)).returning();
   const [job] = await db.select().from(jobsTable).where(eq(jobsTable.id, updated.jobId));

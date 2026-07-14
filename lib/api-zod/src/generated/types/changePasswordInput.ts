@@ -6,9 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface ApplicationStart {
-  jobId: number;
-  expectedStartDate: string;
-  applicationSource: string;
-  coverLetter: string;
+export interface ChangePasswordInput {
+  currentPassword: string;
+  newPassword: string;
 }

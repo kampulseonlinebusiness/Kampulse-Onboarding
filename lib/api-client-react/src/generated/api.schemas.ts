@@ -64,6 +64,30 @@ export interface AdminUserInput {
   role: AdminUserInputRole;
 }
 
+export interface ChangePasswordInput {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export type AdminJobInputStatus = typeof AdminJobInputStatus[keyof typeof AdminJobInputStatus];
+
+
+export const AdminJobInputStatus = {
+  active: 'active',
+  closed: 'closed',
+} as const;
+
+export interface AdminJobInput {
+  title: string;
+  location: string;
+  salary: string;
+  workingHours: string;
+  transportAllowance?: string;
+  overtime?: string;
+  description?: string;
+  status: AdminJobInputStatus;
+}
+
 export type JobStatus = typeof JobStatus[keyof typeof JobStatus];
 
 
@@ -120,6 +144,15 @@ export const PersonalInfoInputMaritalStatus = {
   widowed: 'widowed',
 } as const;
 
+export type PersonalInfoInputComputerLiteracy = typeof PersonalInfoInputComputerLiteracy[keyof typeof PersonalInfoInputComputerLiteracy];
+
+
+export const PersonalInfoInputComputerLiteracy = {
+  proficient: 'proficient',
+  basic: 'basic',
+  none: 'none',
+} as const;
+
 export interface PersonalInfoInput {
   fullName: string;
   dateOfBirth: string;
@@ -139,6 +172,7 @@ export interface PersonalInfoInput {
   emergencyContactRelationship: string;
   emergencyContactPhone: string;
   emergencyContactAddress: string;
+  computerLiteracy?: PersonalInfoInputComputerLiteracy;
 }
 
 export interface GuarantorInfoInput {

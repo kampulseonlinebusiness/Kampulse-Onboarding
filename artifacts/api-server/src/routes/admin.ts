@@ -7,7 +7,7 @@ import {
   statusHistoryTable,
   adminNotesTable,
 } from "@workspace/db";
-import { eq, desc, sql, like, and, gte, count } from "drizzle-orm";
+import { eq, desc, sql, and, gte, count } from "drizzle-orm";
 import {
   ListAdminApplicationsQueryParams,
   GetAdminApplicationParams,
@@ -17,6 +17,8 @@ import {
   AddApplicationNoteBody,
   GenerateApplicationPdfParams,
   GetRecentActivityQueryParams,
+  CreateAdminJobBody,
+  UpdateAdminJobBody,
 } from "@workspace/api-zod";
 import { requireAuth } from "../middlewares/requireAuth";
 import { generateApplicationPdf } from "../lib/pdf";
@@ -26,6 +28,85 @@ const router: IRouter = Router();
 
 // All admin routes require auth
 router.use(requireAuth);
+
+// GET /admin/jobs — list all jobs (any status)
+router.get("/admin/jobs", async (_req, res): Promise<void> => {
+  const jobs = await db.select().from(jobsTable).orderBy(desc(jobsTable.createdAt));
+  res.json(jobs.map(j => ({
+    id: j.id,
+    title: j.title,
+    location: j.location,
+    salary: j.salary,
+    workingHours: j.workingHours,
+    transportAllowance: j.transportAllowance,
+    overtime: j.overtime,
+    description: j.description,
+    status: j.status,
+    createdAt: j.createdAt,
+  })));
+});
+
+// POST /admin/jobs — create job
+router.post("/admin/jobs", async (req, res): Promise<void> => {
+  const parsed = CreateAdminJobBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+  const d = parsed.data;
+  const [job] = await db.insert(jobsTable).values({
+    title: d.title,
+    location: d.location,
+    salary: d.salary,
+    workingHours: d.workingHours,
+    transportAllowance: d.transportAllowance ?? null,
+    overtime: d.overtime ?? null,
+    description: d.description ?? null,
+    status: d.status,
+  }).returning();
+  res.status(201).json({
+    id: job.id, title: job.title, location: job.location, salary: job.salary,
+    workingHours: job.workingHours, transportAllowance: job.transportAllowance,
+    overtime: job.overtime, description: job.description, status: job.status,
+    createdAt: job.createdAt,
+  });
+});
+
+// PATCH /admin/jobs/:id — update job
+router.patch("/admin/jobs/:id", async (req, res): Promise<void> => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) {
+    res.status(400).json({ error: "Invalid ID" });
+    return;
+  }
+  const parsed = UpdateAdminJobBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+  const d = parsed.data;
+  const [existing] = await db.select({ id: jobsTable.id }).from(jobsTable).where(eq(jobsTable.id, id));
+  if (!existing) {
+    res.status(404).json({ error: "Job not found" });
+    return;
+  }
+  const [job] = await db.update(jobsTable).set({
+    title: d.title,
+    location: d.location,
+    salary: d.salary,
+    workingHours: d.workingHours,
+    transportAllowance: d.transportAllowance ?? null,
+    overtime: d.overtime ?? null,
+    description: d.description ?? null,
+    status: d.status,
+  }).where(eq(jobsTable.id, id)).returning();
+  res.json({
+    id: job.id, title: job.title, location: job.location, salary: job.salary,
+    workingHours: job.workingHours, transportAllowance: job.transportAllowance,
+    overtime: job.overtime, description: job.description, status: job.status,
+    createdAt: job.createdAt,
+  });
+});
 
 // GET /admin/stats
 router.get("/admin/stats", async (_req, res): Promise<void> => {
@@ -185,6 +266,7 @@ router.get("/admin/applications/:id", async (req, res): Promise<void> => {
       emergencyContactRelationship: application.emergencyContactRelationship,
       emergencyContactPhone: application.emergencyContactPhone,
       emergencyContactAddress: application.emergencyContactAddress,
+      computerLiteracy: application.computerLiteracy,
     },
     documents: docs.map(d => ({
       id: d.id,

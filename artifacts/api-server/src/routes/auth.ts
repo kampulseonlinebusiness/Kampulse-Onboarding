@@ -6,6 +6,7 @@ import {
   AdminLoginBody,
   RefreshTokenBody,
   CreateAdminUserBody,
+  ChangePasswordBody,
 } from "@workspace/api-zod";
 import {
   signAccessToken,
@@ -76,6 +77,28 @@ router.get("/auth/me", requireAuth, async (req, res): Promise<void> => {
     return;
   }
   res.json({ id: user.id, email: user.email, name: user.name, role: user.role });
+});
+
+router.post("/auth/change-password", requireAuth, async (req, res): Promise<void> => {
+  const parsed = ChangePasswordBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+  const { currentPassword, newPassword } = parsed.data;
+  const [user] = await db.select().from(usersTable).where(eq(usersTable.id, req.user!.id));
+  if (!user) {
+    res.status(401).json({ error: "User not found" });
+    return;
+  }
+  const valid = await comparePassword(currentPassword, user.passwordHash);
+  if (!valid) {
+    res.status(400).json({ error: "Current password is incorrect" });
+    return;
+  }
+  const newHash = await hashPassword(newPassword);
+  await db.update(usersTable).set({ passwordHash: newHash }).where(eq(usersTable.id, user.id));
+  res.json({ message: "Password changed successfully" });
 });
 
 router.post("/admin/users", requireAuth, async (req, res): Promise<void> => {

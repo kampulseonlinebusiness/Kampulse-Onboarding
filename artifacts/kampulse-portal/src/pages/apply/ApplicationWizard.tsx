@@ -182,6 +182,7 @@ const personalInfoSchema = z.object({
   emergencyContactRelationship: z.string().min(2, "Relationship is required"),
   emergencyContactPhone: z.string().min(10, "Valid phone is required"),
   emergencyContactAddress: z.string().min(5, "Address is required"),
+  computerLiteracy: z.enum(["proficient", "basic", "none"], { required_error: "Please indicate your computer literacy level" }),
 });
 
 function Step2PersonalInfo({ app, onNext, onBack, token }: { app: any; onNext: () => void; onBack: () => void; token: string }) {
@@ -208,6 +209,7 @@ function Step2PersonalInfo({ app, onNext, onBack, token }: { app: any; onNext: (
       emergencyContactRelationship: app.personalInfo?.emergencyContactRelationship || "",
       emergencyContactPhone: app.personalInfo?.emergencyContactPhone || "",
       emergencyContactAddress: app.personalInfo?.emergencyContactAddress || "",
+      computerLiteracy: ((app.personalInfo as any)?.computerLiteracy as "proficient" | "basic" | "none") || undefined,
     }
   });
 
@@ -314,6 +316,25 @@ function Step2PersonalInfo({ app, onNext, onBack, token }: { app: any; onNext: (
                 <FormItem><FormLabel>Address</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
               )} />
             </div>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="font-bold text-lg border-b pb-2">Computer Literacy</h3>
+            <p className="text-sm text-muted-foreground">This role involves operating computer-based betting terminals. Please indicate your level of computer proficiency.</p>
+            <FormField control={form.control} name="computerLiteracy" render={({ field }) => (
+              <FormItem>
+                <FormLabel>Are you computer literate? <span className="text-destructive">*</span></FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl><SelectTrigger><SelectValue placeholder="Select your computer literacy level" /></SelectTrigger></FormControl>
+                  <SelectContent>
+                    <SelectItem value="proficient">Yes — Proficient (comfortable with computers and software)</SelectItem>
+                    <SelectItem value="basic">Yes — Basic Knowledge (can perform simple tasks)</SelectItem>
+                    <SelectItem value="none">No — Not computer literate</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )} />
           </div>
 
           <div className="flex justify-between pt-6 border-t">
