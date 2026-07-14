@@ -246,27 +246,32 @@ export function HomePage() {
               {
                 title: "Online Application",
                 desc: "Complete your application through our secure recruitment portal.",
-                photo: null,
+                photo: "/images/process-online-application.png",
+                photoAlt: "Hand holding a phone with the Kampulse recruitment app open",
               },
               {
                 title: "Document Verification",
                 desc: "Submit your identification, qualifications, and supporting documents for verification.",
-                photo: null,
+                photo: "/images/process-document-verification.jpg",
+                photoAlt: "Person ticking off a digital checklist on a tablet with a stylus",
               },
               {
                 title: "Background & Guarantor Verification",
                 desc: "We verify information provided to maintain trust and workplace security.",
-                photo: null,
+                photo: "/images/process-background-verification.png",
+                photoAlt: "Kampulse guarantor vetting form printed and placed on a wooden desk",
               },
               {
                 title: "Application Assessment",
                 desc: "Our recruitment team carefully evaluates your experience and suitability.",
-                photo: null,
+                photo: "/images/process-application-assessment.jpg",
+                photoAlt: "Two professionals reviewing and signing formal application documents",
               },
               {
                 title: "Interview & Evaluation",
                 desc: "Qualified candidates participate in interviews and role-specific assessments.",
-                photo: null,
+                photo: "/images/process-interview-evaluation.jpg",
+                photoAlt: "Recruiter conducting a one-on-one interview with a candidate",
               },
               {
                 title: "Offer & Onboarding",
@@ -282,20 +287,22 @@ export function HomePage() {
                 <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-background bg-muted-foreground/20 text-muted-foreground group-[.is-active]:bg-primary group-[.is-active]:text-primary-foreground shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow font-bold text-sm z-10">
                   {i + 1}
                 </div>
-                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-card p-6 rounded-xl border shadow-sm overflow-hidden">
+                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-card rounded-xl border shadow-sm overflow-hidden">
                   {step.photo && (
-                    <div className="relative h-32 -mx-6 -mt-6 mb-4 overflow-hidden">
+                    <div className="relative h-44 overflow-hidden">
                       <img
                         src={step.photo}
                         alt={step.photoAlt}
                         loading="lazy"
-                        className="w-full h-full object-cover object-center"
+                        className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-card/80" />
+                      <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-card/90" />
                     </div>
                   )}
-                  <h3 className="font-bold text-lg mb-1">{step.title}</h3>
-                  <p className="text-muted-foreground text-sm">{step.desc}</p>
+                  <div className="p-6">
+                    <h3 className="font-bold text-lg mb-1">{step.title}</h3>
+                    <p className="text-muted-foreground text-sm">{step.desc}</p>
+                  </div>
                 </div>
               </div>
             ))}
