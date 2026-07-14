@@ -12,6 +12,9 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/jobs", label: "Open Positions" },
+    { href: "/about", label: "About Us" },
+    { href: "/business-solutions", label: "Business Solutions" },
+    { href: "/contact", label: "Contact" },
   ];
 
   return (
