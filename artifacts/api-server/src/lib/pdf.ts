@@ -60,6 +60,14 @@ export async function generateApplicationPdf(application: ApplicationWithJob): P
       doc.text(`Address: ${application.address ?? "N/A"}`);
       doc.text(`Phone: ${application.phone ?? "N/A"}`);
       doc.text(`Email: ${application.email ?? "N/A"}`);
+      const literacyLabel = application.computerLiteracy === "proficient"
+        ? "Yes — Proficient"
+        : application.computerLiteracy === "basic"
+          ? "Yes — Basic Knowledge"
+          : application.computerLiteracy === "none"
+            ? "No — Not computer literate"
+            : "N/A";
+      doc.text(`Computer Literacy: ${literacyLabel}`);
 
       doc.moveDown(0.5);
       doc.fillColor("#1e3a5f").fontSize(12).text("Next of Kin");

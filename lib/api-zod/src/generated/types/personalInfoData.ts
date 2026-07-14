@@ -5,6 +5,7 @@
  * Kampulse Recruitment & Employee Onboarding Portal API
  * OpenAPI spec version: 0.1.0
  */
+import type { PersonalInfoDataComputerLiteracy } from './personalInfoDataComputerLiteracy';
 
 export interface PersonalInfoData {
   /** @nullable */
@@ -43,4 +44,6 @@ export interface PersonalInfoData {
   emergencyContactPhone?: string | null;
   /** @nullable */
   emergencyContactAddress?: string | null;
+  /** @nullable */
+  computerLiteracy?: PersonalInfoDataComputerLiteracy;
 }

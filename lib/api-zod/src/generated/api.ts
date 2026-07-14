@@ -256,7 +256,8 @@ export const ResumeApplicationResponse = zod.object({
   "emergencyContactName": zod.string().nullish(),
   "emergencyContactRelationship": zod.string().nullish(),
   "emergencyContactPhone": zod.string().nullish(),
-  "emergencyContactAddress": zod.string().nullish()
+  "emergencyContactAddress": zod.string().nullish(),
+  "computerLiteracy": zod.union([zod.literal('proficient'),zod.literal('basic'),zod.literal('none'),zod.literal(null)]).nullish()
 }).optional(),
   "documents": zod.array(zod.object({
   "id": zod.number(),
@@ -347,7 +348,8 @@ export const SavePersonalInfoResponse = zod.object({
   "emergencyContactName": zod.string().nullish(),
   "emergencyContactRelationship": zod.string().nullish(),
   "emergencyContactPhone": zod.string().nullish(),
-  "emergencyContactAddress": zod.string().nullish()
+  "emergencyContactAddress": zod.string().nullish(),
+  "computerLiteracy": zod.union([zod.literal('proficient'),zod.literal('basic'),zod.literal('none'),zod.literal(null)]).nullish()
 }).optional(),
   "documents": zod.array(zod.object({
   "id": zod.number(),
@@ -435,7 +437,8 @@ export const SaveGuarantorInfoResponse = zod.object({
   "emergencyContactName": zod.string().nullish(),
   "emergencyContactRelationship": zod.string().nullish(),
   "emergencyContactPhone": zod.string().nullish(),
-  "emergencyContactAddress": zod.string().nullish()
+  "emergencyContactAddress": zod.string().nullish(),
+  "computerLiteracy": zod.union([zod.literal('proficient'),zod.literal('basic'),zod.literal('none'),zod.literal(null)]).nullish()
 }).optional(),
   "documents": zod.array(zod.object({
   "id": zod.number(),
@@ -510,7 +513,8 @@ export const SaveAgreementResponse = zod.object({
   "emergencyContactName": zod.string().nullish(),
   "emergencyContactRelationship": zod.string().nullish(),
   "emergencyContactPhone": zod.string().nullish(),
-  "emergencyContactAddress": zod.string().nullish()
+  "emergencyContactAddress": zod.string().nullish(),
+  "computerLiteracy": zod.union([zod.literal('proficient'),zod.literal('basic'),zod.literal('none'),zod.literal(null)]).nullish()
 }).optional(),
   "documents": zod.array(zod.object({
   "id": zod.number(),
@@ -579,7 +583,8 @@ export const SubmitApplicationResponse = zod.object({
   "emergencyContactName": zod.string().nullish(),
   "emergencyContactRelationship": zod.string().nullish(),
   "emergencyContactPhone": zod.string().nullish(),
-  "emergencyContactAddress": zod.string().nullish()
+  "emergencyContactAddress": zod.string().nullish(),
+  "computerLiteracy": zod.union([zod.literal('proficient'),zod.literal('basic'),zod.literal('none'),zod.literal(null)]).nullish()
 }).optional(),
   "documents": zod.array(zod.object({
   "id": zod.number(),
@@ -698,7 +703,8 @@ export const GetAdminApplicationResponse = zod.object({
   "emergencyContactName": zod.string().nullish(),
   "emergencyContactRelationship": zod.string().nullish(),
   "emergencyContactPhone": zod.string().nullish(),
-  "emergencyContactAddress": zod.string().nullish()
+  "emergencyContactAddress": zod.string().nullish(),
+  "computerLiteracy": zod.union([zod.literal('proficient'),zod.literal('basic'),zod.literal('none'),zod.literal(null)]).nullish()
 }).optional(),
   "documents": zod.array(zod.object({
   "id": zod.number(),
@@ -788,7 +794,8 @@ export const UpdateApplicationStatusResponse = zod.object({
   "emergencyContactName": zod.string().nullish(),
   "emergencyContactRelationship": zod.string().nullish(),
   "emergencyContactPhone": zod.string().nullish(),
-  "emergencyContactAddress": zod.string().nullish()
+  "emergencyContactAddress": zod.string().nullish(),
+  "computerLiteracy": zod.union([zod.literal('proficient'),zod.literal('basic'),zod.literal('none'),zod.literal(null)]).nullish()
 }).optional(),
   "documents": zod.array(zod.object({
   "id": zod.number(),

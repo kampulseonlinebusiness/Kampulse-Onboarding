@@ -214,9 +214,9 @@ export function AdminApplicationDetail() {
                         <div>
                           <p className="text-sm text-muted-foreground">Computer Literacy</p>
                           <p className="font-medium capitalize">
-                            {(app.personalInfo as any)?.computerLiteracy === "proficient" ? "Yes — Proficient"
-                              : (app.personalInfo as any)?.computerLiteracy === "basic" ? "Yes — Basic Knowledge"
-                              : (app.personalInfo as any)?.computerLiteracy === "none" ? "No — Not computer literate"
+                            {app.personalInfo?.computerLiteracy === "proficient" ? "Yes — Proficient"
+                              : app.personalInfo?.computerLiteracy === "basic" ? "Yes — Basic Knowledge"
+                              : app.personalInfo?.computerLiteracy === "none" ? "No — Not computer literate"
                               : "Not specified"}
                           </p>
                         </div>

@@ -1049,6 +1049,9 @@ components:
           type: ["string", "null"]
         emergencyContactAddress:
           type: ["string", "null"]
+        computerLiteracy:
+          type: ["string", "null"]
+          enum: [proficient, basic, none, null]
 
     GuarantorInfoData:
       type: object

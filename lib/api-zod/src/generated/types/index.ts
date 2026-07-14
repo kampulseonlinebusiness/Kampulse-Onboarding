@@ -44,6 +44,7 @@ export * from './loginInput';
 export * from './messageResponse';
 export * from './pdfResponse';
 export * from './personalInfoData';
+export * from './personalInfoDataComputerLiteracy';
 export * from './personalInfoInput';
 export * from './personalInfoInputComputerLiteracy';
 export * from './personalInfoInputGender';

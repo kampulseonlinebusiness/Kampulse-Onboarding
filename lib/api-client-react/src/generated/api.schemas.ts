@@ -219,6 +219,18 @@ export const ApplicationResumeStatus = {
   rejected: 'rejected',
 } as const;
 
+/**
+ * @nullable
+ */
+export type PersonalInfoDataComputerLiteracy = typeof PersonalInfoDataComputerLiteracy[keyof typeof PersonalInfoDataComputerLiteracy] | null;
+
+
+export const PersonalInfoDataComputerLiteracy = {
+  proficient: 'proficient',
+  basic: 'basic',
+  none: 'none',
+} as const;
+
 export interface PersonalInfoData {
   /** @nullable */
   fullName?: string | null;
@@ -256,6 +268,8 @@ export interface PersonalInfoData {
   emergencyContactPhone?: string | null;
   /** @nullable */
   emergencyContactAddress?: string | null;
+  /** @nullable */
+  computerLiteracy?: PersonalInfoDataComputerLiteracy;
 }
 
 export interface DocumentData {
