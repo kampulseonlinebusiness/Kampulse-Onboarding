@@ -265,8 +265,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7
       react-signature-canvas:
-        specifier: 1.1.0-alpha.2
-        version: 1.1.0-alpha.2(@types/react@19.2.17)(prop-types@15.8.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: 1.0.6
+        version: 1.0.6(prop-types@15.8.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
     devDependencies:
       '@hookform/resolvers':
         specifier: ^3.10.0
@@ -2941,19 +2941,12 @@ packages:
       react: ^16.14.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
       react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
 
-  react-signature-canvas@1.1.0-alpha.2:
-    resolution: {integrity: sha512-tKUNk3Gmh04Ug4K8p5g8Is08BFUKvbXxi0PyetQ/f8OgCBzcx4vqNf9+OArY/TdNdfHtswXQNRwZD6tyELjkjQ==}
+  react-signature-canvas@1.0.6:
+    resolution: {integrity: sha512-NoMHomYu9HxFeLjUGbIeV9abPdWSROfFxFNDekGdwmmaIx+w5ziOEiU2C34X0Ao4GxFnwqyUy/BpYlA4lCD1CA==}
     peerDependencies:
-      '@types/prop-types': ^15.7.3
-      '@types/react': 0.14 - 19
       prop-types: ^15.5.8
-      react: 0.14 - 19
-      react-dom: 0.14 - 19
-    peerDependenciesMeta:
-      '@types/prop-types':
-        optional: true
-      '@types/react':
-        optional: true
+      react: 0.14 - 18
+      react-dom: 0.14 - 18
 
   react-smooth@4.0.4:
     resolution: {integrity: sha512-gnGKTpYwqL0Iii09gHobNolvX4Kiq4PKx6eWBCYYix+8cdw+cGo3do906l1NBPKkSWx1DghC1dlWG9L2uGd61Q==}
@@ -5692,17 +5685,13 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
-  react-signature-canvas@1.1.0-alpha.2(@types/react@19.2.17)(prop-types@15.8.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  react-signature-canvas@1.0.6(prop-types@15.8.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
-      '@babel/runtime': 7.29.7
-      '@types/signature_pad': 2.3.6
       prop-types: 15.8.1
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
       signature_pad: 2.3.2
       trim-canvas: 0.1.2
-    optionalDependencies:
-      '@types/react': 19.2.17
 
   react-smooth@4.0.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
