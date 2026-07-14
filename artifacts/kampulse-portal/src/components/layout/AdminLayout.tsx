@@ -57,11 +57,11 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen flex flex-col md:flex-row">
       {/* Mobile Header */}
       <div className="md:hidden flex items-center justify-between p-4 bg-sidebar/90 backdrop-blur border-b border-sidebar-border text-sidebar-foreground">
-        <div className="flex items-center gap-2 font-bold text-lg">
+        <div className="flex items-center gap-2">
           <img
             src="/images/kampulse-logo.png"
             alt="Kampulse Handling Solutions Ltd"
-            className="h-8 w-auto object-contain rounded"
+            className="h-16 w-auto object-contain rounded-xl drop-shadow-lg"
           />
         </div>
         <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
@@ -75,11 +75,11 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
           mobileMenuOpen ? "block" : "hidden"
         } md:block w-full md:w-64 bg-sidebar/90 backdrop-blur border-r border-sidebar-border text-sidebar-foreground flex flex-col`}
       >
-        <div className="hidden md:flex p-6 items-center gap-2 border-b border-sidebar-border/50">
+        <div className="hidden md:flex px-6 py-5 items-center justify-center border-b border-sidebar-border/50">
           <img
             src="/images/kampulse-logo.png"
             alt="Kampulse Handling Solutions Ltd"
-            className="h-12 w-auto object-contain rounded"
+            className="h-28 w-auto object-contain rounded-xl drop-shadow-lg"
           />
         </div>
 

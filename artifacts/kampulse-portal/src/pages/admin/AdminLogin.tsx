@@ -72,7 +72,7 @@ export function AdminLogin() {
           <img
             src="/images/kampulse-logo.png"
             alt="Kampulse Handling Solutions Ltd"
-            className="h-20 w-auto mx-auto mb-4 rounded-xl object-contain"
+            className="h-36 w-auto mx-auto mb-4 rounded-xl object-contain drop-shadow-xl"
           />
           <h1 className="text-2xl font-bold tracking-tight mb-1">Kampulse Admin</h1>
           <p className="text-muted-foreground text-sm">Sign in to manage the portal</p>
