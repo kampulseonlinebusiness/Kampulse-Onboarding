@@ -88,6 +88,31 @@ export const ChangePasswordResponse = zod.object({
 
 
 /**
+ * @summary Request a password reset link
+ */
+export const ForgotPasswordBody = zod.object({
+  "email": zod.string().email()
+})
+
+export const ForgotPasswordResponse = zod.object({
+  "message": zod.string()
+})
+
+
+/**
+ * @summary Reset password using a reset token
+ */
+export const ResetPasswordBody = zod.object({
+  "token": zod.string(),
+  "newPassword": zod.string()
+})
+
+export const ResetPasswordResponse = zod.object({
+  "message": zod.string()
+})
+
+
+/**
  * @summary List all jobs (any status)
  */
 export const ListAdminJobsResponseItem = zod.object({

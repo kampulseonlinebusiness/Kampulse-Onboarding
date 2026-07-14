@@ -18,6 +18,8 @@ import { AdminApplications } from '@/pages/admin/AdminApplications';
 import { AdminApplicationDetail } from '@/pages/admin/AdminApplicationDetail';
 import { AdminJobs } from '@/pages/admin/AdminJobs';
 import { AdminChangePassword } from '@/pages/admin/AdminChangePassword';
+import { ForgotPassword } from '@/pages/admin/ForgotPassword';
+import { ResetPassword } from '@/pages/admin/ResetPassword';
 
 const queryClient = new QueryClient();
 
@@ -32,6 +34,8 @@ function Router() {
       <Route path="/apply/:token" component={ApplicationWizard} />
       
       <Route path="/admin/login" component={AdminLogin} />
+      <Route path="/admin/forgot-password" component={ForgotPassword} />
+      <Route path="/admin/reset-password" component={ResetPassword} />
       <Route path="/admin">
         <Redirect to="/admin/dashboard" />
       </Route>

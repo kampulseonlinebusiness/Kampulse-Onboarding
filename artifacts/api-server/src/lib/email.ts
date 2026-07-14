@@ -60,6 +60,37 @@ export async function sendApplicationSubmittedEmail(applicantEmail: string, appl
   }
 }
 
+export async function sendPasswordResetEmail(adminEmail: string, adminName: string, token: string): Promise<void> {
+  if (!process.env.SMTP_USER) {
+    logger.info({ adminEmail }, "Email not configured, skipping sendPasswordResetEmail");
+    return;
+  }
+  const resetUrl = `${BASE_URL}/admin/reset-password?token=${token}`;
+  try {
+    await transporter.sendMail({
+      from: FROM,
+      to: adminEmail,
+      subject: "Reset Your Kampulse Admin Password",
+      html: `
+        <style>${emailStyles()}</style>
+        <div class="container">
+          <div class="header"><h1>Kampulse Handling Solutions Ltd</h1></div>
+          <div class="body">
+            <p>Dear ${adminName},</p>
+            <p>We received a request to reset the password for your admin account. Click the button below to set a new password:</p>
+            <p><a href="${resetUrl}" class="btn">Reset My Password</a></p>
+            <p>This link expires in <strong>1 hour</strong>. If you did not request a password reset, you can safely ignore this email — your password will not change.</p>
+            <p>Best regards,<br/>Kampulse Handling Solutions Ltd</p>
+          </div>
+          <div class="footer">Osubi, Delta State, Nigeria</div>
+        </div>
+      `,
+    });
+  } catch (err) {
+    logger.error({ err }, "Failed to send password reset email");
+  }
+}
+
 export async function sendStatusUpdateEmail(applicantEmail: string, applicantName: string, status: string): Promise<void> {
   if (!process.env.SMTP_USER) {
     logger.info({ applicantEmail }, "Email not configured, skipping sendStatusUpdateEmail");

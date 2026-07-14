@@ -1,12 +1,15 @@
 import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
-import { usersTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { usersTable, passwordResetTokensTable } from "@workspace/db";
+import { eq, and, gt } from "drizzle-orm";
+import crypto from "crypto";
 import {
   AdminLoginBody,
   RefreshTokenBody,
   CreateAdminUserBody,
   ChangePasswordBody,
+  ForgotPasswordBody,
+  ResetPasswordBody,
 } from "@workspace/api-zod";
 import {
   signAccessToken,
@@ -16,6 +19,7 @@ import {
   comparePassword,
 } from "../lib/auth";
 import { requireAuth } from "../middlewares/requireAuth";
+import { sendPasswordResetEmail } from "../lib/email";
 
 const router: IRouter = Router();
 
@@ -99,6 +103,64 @@ router.post("/auth/change-password", requireAuth, async (req, res): Promise<void
   const newHash = await hashPassword(newPassword);
   await db.update(usersTable).set({ passwordHash: newHash }).where(eq(usersTable.id, user.id));
   res.json({ message: "Password changed successfully" });
+});
+
+router.post("/auth/forgot-password", async (req, res): Promise<void> => {
+  const parsed = ForgotPasswordBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+  const { email } = parsed.data;
+
+  // Always return 200 to avoid revealing which emails are registered
+  const [user] = await db.select().from(usersTable).where(eq(usersTable.email, email));
+  if (!user) {
+    res.json({ message: "If that email is registered, a reset link has been sent." });
+    return;
+  }
+
+  // Invalidate any existing tokens for this user
+  await db.delete(passwordResetTokensTable).where(eq(passwordResetTokensTable.userId, user.id));
+
+  const token = crypto.randomBytes(32).toString("hex");
+  const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+  await db.insert(passwordResetTokensTable).values({ userId: user.id, token, expiresAt });
+
+  await sendPasswordResetEmail(user.email, user.name, token);
+
+  res.json({ message: "If that email is registered, a reset link has been sent." });
+});
+
+router.post("/auth/reset-password", async (req, res): Promise<void> => {
+  const parsed = ResetPasswordBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+  const { token, newPassword } = parsed.data;
+
+  const [resetRecord] = await db
+    .select()
+    .from(passwordResetTokensTable)
+    .where(
+      and(
+        eq(passwordResetTokensTable.token, token),
+        gt(passwordResetTokensTable.expiresAt, new Date())
+      )
+    );
+
+  if (!resetRecord) {
+    res.status(400).json({ error: "This reset link is invalid or has expired. Please request a new one." });
+    return;
+  }
+
+  const newHash = await hashPassword(newPassword);
+  await db.update(usersTable).set({ passwordHash: newHash }).where(eq(usersTable.id, resetRecord.userId));
+  await db.delete(passwordResetTokensTable).where(eq(passwordResetTokensTable.id, resetRecord.id));
+
+  res.json({ message: "Password reset successfully. You can now sign in with your new password." });
 });
 
 router.post("/admin/users", requireAuth, async (req, res): Promise<void> => {

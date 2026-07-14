@@ -69,6 +69,15 @@ export interface ChangePasswordInput {
   newPassword: string;
 }
 
+export interface ForgotPasswordInput {
+  email: string;
+}
+
+export interface ResetPasswordInput {
+  token: string;
+  newPassword: string;
+}
+
 export type AdminJobInputStatus = typeof AdminJobInputStatus[keyof typeof AdminJobInputStatus];
 
 
