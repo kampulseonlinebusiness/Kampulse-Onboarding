@@ -1,0 +1,591 @@
+# Kampulse Recruitment & Employee Onboarding Portal
+
+Build a complete, production-ready Recruitment & Employee Onboarding Web Application for Kampulse Handling Solutions Ltd.
+
+## Core Requirement
+
+The entire application must be self-contained.
+
+Do NOT use Supabase, Firebase, MongoDB Atlas, PlanetScale, Neon, Railway, Appwrite, PocketBase, or any Backend-as-a-Service.
+
+Use PostgreSQL as the application's database, but configure it as part of this project so the entire application is self-contained and deployable as one project. The application should not rely on any third-party cloud database service.
+
+All uploaded files must be managed by the application itself using local persistent storage. The database should store only metadata and file paths.
+
+The final project should contain:
+
+- Frontend
+- Backend API
+- PostgreSQL database configuration
+- Authentication
+- Admin Dashboard
+- File Upload System
+- PDF Generator
+- Email notification module
+
+Everything should belong to one complete project.
+
+--------------------------------------------
+
+## Technology Stack
+
+Frontend
+- React
+- TypeScript
+- TailwindCSS
+- shadcn/ui
+- React Hook Form
+- Zod
+- TanStack Router
+- TanStack Query
+
+Backend
+
+- Node.js
+- Express
+- TypeScript
+
+Database
+
+- PostgreSQL
+- Prisma ORM
+
+Authentication
+
+- JWT Authentication
+- Password Hashing (bcrypt)
+
+Storage
+
+Use local project storage.
+
+Store uploaded files in:
+
+uploads/
+
+    passport/
+    cv/
+    certificates/
+    ids/
+    proof_of_address/
+    guarantor/
+    medical/
+    generated-pdf/
+
+The database stores only file metadata and paths.
+
+--------------------------------------------
+
+## Public Website
+
+Homepage
+
+Include:
+
+- Hero Section
+- About Kampulse
+- Company Values
+- Why Work With Us
+- Recruitment Process
+- Current Open Positions
+- Contact Information
+
+Jobs Page
+
+Display available vacancies.
+
+Seed one position:
+
+Betshop Cashier
+
+Location:
+Osubi, Delta State
+
+Salary:
+₦70,000 Monthly
+
+Working Hours:
+
+Monday–Saturday
+
+8:00 AM – 5:00 PM
+
+Transport Allowance
+
+₦2,000 Daily
+
+₦12,000 Weekly
+
+Overtime
+
+₦2,000 per approved overtime session.
+
+Each vacancy should have:
+
+Apply Now
+
+--------------------------------------------
+
+## Multi-Step Recruitment Process
+
+Applicants do NOT need an account.
+
+Every applicant receives a unique secure application link that allows them to continue later.
+
+Progress must save automatically.
+
+Show a progress indicator.
+
+--------------------------------------------
+
+STEP 1
+
+Job Application
+
+Collect:
+
+- Position
+- Expected Start Date
+- Application Source
+- Cover Letter
+
+--------------------------------------------
+
+STEP 2
+
+Personal Information
+
+Collect:
+
+Personal Details
+
+- Full Name
+- Date of Birth
+- Gender
+- Nationality
+- State of Origin
+- LGA
+- Marital Status
+
+Contact
+
+- Address
+- Phone
+- Email
+
+Next of Kin
+
+- Name
+- Relationship
+- Phone
+- Address
+
+Emergency Contact
+
+- Name
+- Relationship
+- Phone
+- Address
+
+--------------------------------------------
+
+STEP 3
+
+Documents
+
+Upload:
+
+Passport Photograph
+
+Curriculum Vitae
+
+Academic Certificates
+
+Valid ID
+
+Proof of Address
+
+Medical Fitness Report (Optional)
+
+Store files inside the uploads directory.
+
+Store file paths in PostgreSQL.
+
+--------------------------------------------
+
+STEP 4
+
+Guarantor Information
+
+Collect:
+
+Employee Details
+
+Guarantor
+
+- Full Name
+- Residential Address
+- Occupation
+- Place of Work
+- Phone
+- Email
+- Relationship
+- Years Known
+
+Identification
+
+- ID Type
+- ID Number
+- Issue Date
+- Expiry Date
+
+Uploads
+
+- Guarantor Passport
+- Guarantor ID
+
+Witness
+
+- Name
+- Address
+- Phone
+
+Declaration
+
+Checkbox
+
+"I certify that all information is correct."
+
+--------------------------------------------
+
+STEP 5
+
+Employment Agreement
+
+Display the complete Kampulse Employment Agreement.
+
+Include:
+
+Job Description
+
+Salary
+
+Working Hours
+
+Transport Allowance
+
+Overtime
+
+Code of Conduct
+
+Confidentiality
+
+Termination
+
+Resignation
+
+Applicant must:
+
+✔ Read Agreement
+
+✔ Tick
+
+"I Agree"
+
+✔ Type Full Name
+
+✔ Draw Signature
+
+Store:
+
+Agreement Accepted
+
+Signature
+
+Timestamp
+
+IP Address
+
+--------------------------------------------
+
+STEP 6
+
+Review
+
+Display every section.
+
+Allow editing.
+
+Submit Application.
+
+Application status becomes:
+
+Pending
+
+Display success page.
+
+--------------------------------------------
+
+## Admin Portal
+
+Secure login.
+
+Admin Dashboard.
+
+Features
+
+Applications
+
+Status
+
+Pending
+
+Under Review
+
+Approved
+
+Rejected
+
+Search
+
+Filter
+
+Applicant Profile
+
+View
+
+Personal Information
+
+Guarantor
+
+Employment Details
+
+Uploaded Documents
+
+Agreement
+
+Digital Signature
+
+Buttons
+
+Approve
+
+Reject
+
+Request Additional Information
+
+Internal Notes
+
+Status History
+
+--------------------------------------------
+
+## PDF Generator
+
+Generate a professional PDF containing:
+
+Applicant Information
+
+Uploaded Documents List
+
+Employment Details
+
+Guarantor Information
+
+Agreement Acceptance
+
+Digital Signature
+
+Admin Notes
+
+Export PDF.
+
+--------------------------------------------
+
+## Email Notifications
+
+Automatically send:
+
+Application Submitted
+
+Application Under Review
+
+Application Approved
+
+Application Rejected
+
+Design email templates professionally.
+
+Allow SMTP configuration through environment variables.
+
+--------------------------------------------
+
+## PostgreSQL Database
+
+Create all Prisma models.
+
+Jobs
+
+Applications
+
+PersonalInformation
+
+EmploymentInformation
+
+GuarantorInformation
+
+Documents
+
+ApplicationStatusHistory
+
+Users
+
+Roles
+
+Permissions
+
+Sessions
+
+AuditLogs
+
+--------------------------------------------
+
+## Authentication
+
+Admin Login
+
+Email
+
+Password
+
+JWT
+
+Refresh Token
+
+Password Reset
+
+Role-Based Access Control
+
+Roles
+
+Admin
+
+HR
+
+Super Admin
+
+--------------------------------------------
+
+## Validation
+
+Use Zod.
+
+Validate every field.
+
+Prevent duplicate applications.
+
+Restrict file size.
+
+Allow only:
+
+PDF
+
+PNG
+
+JPG
+
+JPEG
+
+--------------------------------------------
+
+## UI Design
+
+Professional Corporate Design
+
+Colors
+
+Primary
+
+Deep Blue
+
+Secondary
+
+White
+
+Accent
+
+Light Blue
+
+Responsive
+
+Mobile First
+
+Cards
+
+Progress Bar
+
+Large Buttons
+
+Animations
+
+Clean Dashboard
+
+Modern Typography
+
+--------------------------------------------
+
+## Security
+
+Sanitize all inputs.
+
+Hash passwords.
+
+Protect uploads.
+
+Prevent SQL Injection.
+
+Prevent XSS.
+
+Use CSRF protection where applicable.
+
+Validate file uploads.
+
+Generate secure filenames.
+
+--------------------------------------------
+
+## Code Quality
+
+Use clean architecture.
+
+Separate:
+
+Controllers
+
+Services
+
+Routes
+
+Middleware
+
+Utilities
+
+Database
+
+Models
+
+Components
+
+Reusable Hooks
+
+Reusable UI Components
+
+Strong TypeScript typing throughout.
+
+--------------------------------------------
+
+## Deliverables
+
+Generate a complete production-ready Recruitment Management System.
+
+The application should be fully functional without requiring any external Backend-as-a-Service or cloud database provider. PostgreSQL should be the application's database, managed as part of the overall project, with all uploaded documents handled by the application and stored locally in the project's persistent storage.

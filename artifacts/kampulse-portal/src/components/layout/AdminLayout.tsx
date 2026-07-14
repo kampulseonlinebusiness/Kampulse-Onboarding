@@ -1,0 +1,131 @@
+import React, { useEffect } from "react";
+import { Link, useLocation } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
+import { useGetMe, useAdminLogout } from "@workspace/api-client-react";
+import { Building, LayoutDashboard, Users, LogOut, Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+export function AdminLayout({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, logout, user } = useAuth();
+  const [, setLocation] = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [location] = useLocation();
+
+  const { error } = useGetMe({
+    query: {
+      enabled: isAuthenticated,
+      retry: false,
+    },
+  });
+
+  const logoutMutation = useAdminLogout();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setLocation("/admin/login");
+    }
+  }, [isAuthenticated, setLocation]);
+
+  useEffect(() => {
+    if (error && (error as any).status === 401) {
+      logout();
+      setLocation("/admin/login");
+    }
+  }, [error, logout, setLocation]);
+
+  const handleLogout = () => {
+    logoutMutation.mutate(undefined, {
+      onSettled: () => {
+        logout();
+        setLocation("/admin/login");
+      },
+    });
+  };
+
+  if (!isAuthenticated) return null;
+
+  const navLinks = [
+    { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/admin/applications", label: "Applications", icon: Users },
+  ];
+
+  return (
+    <div className="min-h-screen flex flex-col md:flex-row bg-muted/30">
+      {/* Mobile Header */}
+      <div className="md:hidden flex items-center justify-between p-4 bg-sidebar border-b border-sidebar-border text-sidebar-foreground">
+        <div className="flex items-center gap-2 font-bold text-lg">
+          <Building className="w-5 h-5 text-primary" />
+          Kampulse Admin
+        </div>
+        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
+
+      {/* Sidebar */}
+      <aside
+        className={`${
+          mobileMenuOpen ? "block" : "hidden"
+        } md:block w-full md:w-64 bg-sidebar border-r border-sidebar-border text-sidebar-foreground flex flex-col`}
+      >
+        <div className="hidden md:flex p-6 items-center gap-2 font-bold text-xl border-b border-sidebar-border/50">
+          <div className="w-8 h-8 bg-primary rounded flex items-center justify-center text-primary-foreground">
+            <Building className="w-5 h-5" />
+          </div>
+          Kampulse
+        </div>
+
+        <div className="p-4 flex flex-col gap-1 flex-1">
+          <div className="text-xs font-semibold text-sidebar-foreground/50 uppercase tracking-wider mb-4 mt-2 px-2">
+            Menu
+          </div>
+          {navLinks.map((link) => {
+            const Icon = link.icon;
+            const isActive = location.startsWith(link.href);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
+                  isActive
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                }`}
+              >
+                <Icon className="w-5 h-5" />
+                {link.label}
+              </Link>
+            );
+          })}
+        </div>
+
+        <div className="p-4 border-t border-sidebar-border/50 mt-auto">
+          <div className="flex items-center gap-3 px-3 py-3 mb-2 bg-sidebar-accent/30 rounded-md">
+            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+              {user?.name?.charAt(0) || "A"}
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <div className="text-sm font-medium truncate">{user?.name}</div>
+              <div className="text-xs text-sidebar-foreground/60 truncate">{user?.role}</div>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            className="w-full justify-start text-sidebar-foreground/70 hover:text-destructive hover:bg-destructive/10"
+            onClick={handleLogout}
+            disabled={logoutMutation.isPending}
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            Logout
+          </Button>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <div className="flex-1 overflow-auto p-4 md:p-8">{children}</div>
+      </main>
+    </div>
+  );
+}

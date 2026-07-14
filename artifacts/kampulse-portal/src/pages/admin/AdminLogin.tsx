@@ -1,0 +1,115 @@
+import React, { useState } from "react";
+import { useLocation } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
+import { useAdminLogin } from "@workspace/api-client-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Building, Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+
+const formSchema = z.object({
+  email: z.string().email("Please enter a valid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+export function AdminLogin() {
+  const [, setLocation] = useLocation();
+  const { login, isAuthenticated } = useAuth();
+  const { toast } = useToast();
+  const loginMutation = useAdminLogin();
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  // Redirect if already authenticated
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      setLocation("/admin/dashboard");
+    }
+  }, [isAuthenticated, setLocation]);
+
+  const onSubmit = (values: FormValues) => {
+    loginMutation.mutate({ data: values }, {
+      onSuccess: (res) => {
+        login({
+          accessToken: res.accessToken,
+          refreshToken: res.refreshToken,
+          user: res.user,
+        });
+        toast({ title: "Login Successful", description: "Welcome back." });
+        setLocation("/admin/dashboard");
+      },
+      onError: (err: any) => {
+        toast({
+          title: "Login Failed",
+          description: err.message || "Invalid credentials",
+          variant: "destructive",
+        });
+      }
+    });
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-muted/30 px-4">
+      <div className="w-full max-w-md bg-card border rounded-2xl shadow-xl overflow-hidden">
+        <div className="p-8 text-center border-b bg-muted/10">
+          <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-primary-foreground mx-auto mb-4 shadow-sm">
+            <Building className="w-6 h-6" />
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight mb-1">Kampulse Admin</h1>
+          <p className="text-muted-foreground text-sm">Sign in to manage the portal</p>
+        </div>
+        
+        <div className="p-8">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email Address</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="admin@kampulse.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="••••••••" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button type="submit" className="w-full" size="lg" disabled={loginMutation.isPending}>
+                {loginMutation.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                Sign In
+              </Button>
+            </form>
+          </Form>
+        </div>
+      </div>
+    </div>
+  );
+}

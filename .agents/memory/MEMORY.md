@@ -1,0 +1,1 @@
+- [Kampulse Portal Stack](kampulse-stack.md) — full-stack decisions: JWT auth, bcryptjs (not bcrypt), pdfkit external in esbuild, custom-fetch subpath export required.
