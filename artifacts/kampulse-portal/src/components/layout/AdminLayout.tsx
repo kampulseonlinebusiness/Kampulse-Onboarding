@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { useGetMe, useAdminLogout, getGetMeQueryKey } from "@workspace/api-client-react";
-import { Building, LayoutDashboard, Users, LogOut, Menu, X, Briefcase, KeyRound } from "lucide-react";
+import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, KeyRound } from "lucide-react";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { Button } from "@/components/ui/button";
 
@@ -58,8 +58,11 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       {/* Mobile Header */}
       <div className="md:hidden flex items-center justify-between p-4 bg-sidebar/90 backdrop-blur border-b border-sidebar-border text-sidebar-foreground">
         <div className="flex items-center gap-2 font-bold text-lg">
-          <Building className="w-5 h-5 text-primary" />
-          Kampulse Admin
+          <img
+            src="/images/kampulse-logo.png"
+            alt="Kampulse Handling Solutions Ltd"
+            className="h-8 w-auto object-contain rounded"
+          />
         </div>
         <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -72,11 +75,12 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
           mobileMenuOpen ? "block" : "hidden"
         } md:block w-full md:w-64 bg-sidebar/90 backdrop-blur border-r border-sidebar-border text-sidebar-foreground flex flex-col`}
       >
-        <div className="hidden md:flex p-6 items-center gap-2 font-bold text-xl border-b border-sidebar-border/50">
-          <div className="w-8 h-8 bg-primary rounded flex items-center justify-center text-primary-foreground">
-            <Building className="w-5 h-5" />
-          </div>
-          Kampulse
+        <div className="hidden md:flex p-6 items-center gap-2 border-b border-sidebar-border/50">
+          <img
+            src="/images/kampulse-logo.png"
+            alt="Kampulse Handling Solutions Ltd"
+            className="h-12 w-auto object-contain rounded"
+          />
         </div>
 
         <div className="p-4 flex flex-col gap-1 flex-1">

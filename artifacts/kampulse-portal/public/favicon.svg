@@ -1,3 +1,10 @@
 <svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="180" height="180" rx="36" fill="#FF3C00"/>
+  <!-- Kampulse wing/pulse mark in brand blue -->
+  <rect width="180" height="180" rx="36" fill="#1a1a2e"/>
+  <!-- Top wing - bright blue -->
+  <path d="M55 55 Q90 35 130 50 Q110 65 75 68 Z" fill="#4FC3F7" opacity="0.95"/>
+  <!-- Middle wing - medium blue -->
+  <path d="M50 75 Q88 55 128 68 Q108 82 70 86 Z" fill="#2196F3" opacity="0.85"/>
+  <!-- Bottom wing - purple/indigo -->
+  <path d="M58 95 Q90 78 122 90 Q104 102 72 105 Z" fill="#7C4DFF" opacity="0.75"/>
 </svg>

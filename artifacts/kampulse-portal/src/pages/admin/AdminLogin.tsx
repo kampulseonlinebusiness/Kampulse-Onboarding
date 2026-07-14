@@ -8,7 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Building, Loader2, ArrowLeft } from "lucide-react";
+import { Loader2, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
@@ -69,9 +69,11 @@ export function AdminLogin() {
         </a>
       <div className="bg-card border rounded-2xl shadow-xl overflow-hidden">
         <div className="p-8 text-center border-b bg-muted/10">
-          <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-primary-foreground mx-auto mb-4 shadow-sm">
-            <Building className="w-6 h-6" />
-          </div>
+          <img
+            src="/images/kampulse-logo.png"
+            alt="Kampulse Handling Solutions Ltd"
+            className="h-20 w-auto mx-auto mb-4 rounded-xl object-contain"
+          />
           <h1 className="text-2xl font-bold tracking-tight mb-1">Kampulse Admin</h1>
           <p className="text-muted-foreground text-sm">Sign in to manage the portal</p>
         </div>
