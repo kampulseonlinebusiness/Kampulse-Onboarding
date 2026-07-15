@@ -1,2 +1,11 @@
 User-agent: *
 Allow: /
+
+# Block admin panel, API, and application wizard from all crawlers.
+# These are not public-facing pages and should never appear in search results.
+Disallow: /admin/
+Disallow: /api/
+Disallow: /apply/
+
+# Sitemap location — update the domain when deploying to production.
+Sitemap: https://kampulse.com/sitemap.xml
