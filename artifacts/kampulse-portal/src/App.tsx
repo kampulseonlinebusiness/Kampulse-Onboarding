@@ -15,6 +15,7 @@ import { JobDetailPage } from '@/pages/public/JobDetailPage';
 import { AboutPage } from '@/pages/public/AboutPage';
 import { BusinessSolutionsPage } from '@/pages/public/BusinessSolutionsPage';
 import { DisclaimerPage } from '@/pages/public/DisclaimerPage';
+import { PrivacyPolicyPage } from '@/pages/public/PrivacyPolicyPage';
 import { ContactPage } from '@/pages/public/ContactPage';
 import { StartApplicationPage } from '@/pages/apply/StartApplicationPage';
 import { ApplicationWizard } from '@/pages/apply/ApplicationWizard';
@@ -39,6 +40,7 @@ function Router() {
       <Route path="/about" component={AboutPage} />
       <Route path="/business-solutions" component={BusinessSolutionsPage} />
       <Route path="/disclaimer" component={DisclaimerPage} />
+      <Route path="/privacy-policy" component={PrivacyPolicyPage} />
       <Route path="/contact" component={ContactPage} />
       <Route path="/apply/start/:jobId" component={StartApplicationPage} />
       <Route path="/apply/success" component={ApplicationSuccessPage} />

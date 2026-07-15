@@ -117,6 +117,7 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
               <li><Link href="/about" className="text-muted-foreground hover:text-foreground transition-colors">About Us</Link></li>
               <li><Link href="/contact" className="text-muted-foreground hover:text-foreground transition-colors">Contact</Link></li>
               <li><Link href="/disclaimer" className="text-muted-foreground hover:text-foreground transition-colors">Disclaimer</Link></li>
+              <li><Link href="/privacy-policy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</Link></li>
               <li><Link href="/admin/login" className="text-muted-foreground hover:text-foreground transition-colors">Staff Portal</Link></li>
             </ul>
           </div>

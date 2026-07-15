@@ -721,8 +721,19 @@ function Step5Agreement({ app, onNext, onBack, token }: { app: any; onNext: () =
       <div className="space-y-6 max-w-2xl mx-auto">
         <div className="flex items-start space-x-3">
           <Checkbox id="agree" checked={agreed} onCheckedChange={(c) => setAgreed(c as boolean)} />
-          <label htmlFor="agree" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 pt-0.5">
-            I have read and agree to the Employment Agreement
+          <label htmlFor="agree" className="text-sm font-medium leading-relaxed peer-disabled:cursor-not-allowed peer-disabled:opacity-70 pt-0.5">
+            I have read and agree to the Employment Agreement, and I consent to Kampulse Handling
+            Solutions Ltd collecting and using my personal data for recruitment purposes in accordance
+            with the{" "}
+            <a
+              href="/privacy-policy"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="text-primary underline underline-offset-2 hover:text-primary/80"
+            >
+              Privacy Policy
+            </a>
+            .
           </label>
         </div>
 
