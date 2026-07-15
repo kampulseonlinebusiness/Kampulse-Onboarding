@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "wouter";
-import { Briefcase, Menu, X, ArrowRight } from "lucide-react";
+import { Briefcase, Menu, X, ArrowRight, MapPin, Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
@@ -138,14 +138,25 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
           {/* Contact */}
           <div>
             <h4 className="font-semibold mb-4 text-sm uppercase tracking-wider">Contact</h4>
-            <ul className="space-y-2.5 text-sm text-muted-foreground">
-              <li>No. 9 Ricardo Oguma Close, Opposite Osubi Airport, Delta State, Nigeria</li>
-              <li>
+            <ul className="space-y-4 text-sm text-muted-foreground">
+              <li className="flex items-start gap-3">
+                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <MapPin className="h-3.5 w-3.5" />
+                </span>
+                <span className="leading-relaxed">No. 9 Ricardo Oguma Close, Opposite Osubi Airport, Delta State, Nigeria</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <Mail className="h-3.5 w-3.5" />
+                </span>
                 <a href="mailto:info@kampulse.com" className="hover:text-foreground transition-colors">
                   info@kampulse.com
                 </a>
               </li>
-              <li>
+              <li className="flex items-center gap-3">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <Phone className="h-3.5 w-3.5" />
+                </span>
                 <a href="tel:+2347040621103" className="hover:text-foreground transition-colors">
                   +234 704 062 1103
                 </a>
