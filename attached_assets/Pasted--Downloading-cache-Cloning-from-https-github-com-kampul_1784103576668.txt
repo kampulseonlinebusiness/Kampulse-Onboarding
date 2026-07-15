@@ -1,0 +1,72 @@
+==> Downloading cache...
+==> Cloning from https://github.com/kampulseonlinebusiness/Kampulse-Onboarding
+==> Checking out commit 47e14353ae732f761445b0bd6b4e1a8980496f26 in branch main
+==> Downloaded 104MB in 3s. Extraction took 5s.
+==> Installing dependencies with pnpm...
+==> Using Node.js version 24.14.1 (default)
+==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+==> Running build command 'npx --yes pnpm@10 install --frozen-lockfile && npx pnpm@10 --filter @workspace/kampulse-portal run build'...
+> @workspace/kampulse-portal@0.0.0 build /opt/render/project/src/artifacts/kampulse-portal
+> vite build --config vite.config.ts
+vite v7.3.6 building client environment for production...
+transforming...
+src/components/ui/tooltip.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+src/components/ui/select.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+src/components/ui/label.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+✓ 2806 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/public/index.html                                   4.29 kB │ gzip:   1.41 kB
+dist/public/assets/index-CwnVjHAi.css                  154.06 kB │ gzip:  23.39 kB
+dist/public/assets/clock-DOAFxSrN.js                     0.17 kB │ gzip:   0.16 kB
+dist/public/assets/arrow-left-Cz39ge08.js                0.17 kB │ gzip:   0.16 kB
+dist/public/assets/circle-check-BnTuCzpK.js              0.17 kB │ gzip:   0.17 kB
+dist/public/assets/circle-check-big-C8XcZE3G.js          0.19 kB │ gzip:   0.18 kB
+dist/public/assets/lock-DTaWfAkS.js                      0.20 kB │ gzip:   0.19 kB
+dist/public/assets/briefcase-CjL4vsfU.js                 0.22 kB │ gzip:   0.20 kB
+dist/public/assets/globe-DYdUGNFa.js                     0.24 kB │ gzip:   0.19 kB
+dist/public/assets/eye-BU7IxFRJ.js                       0.25 kB │ gzip:   0.20 kB
+dist/public/assets/calendar-C-WoPp-M.js                  0.26 kB │ gzip:   0.20 kB
+dist/public/assets/users-BsNv9Yur.js                     0.31 kB │ gzip:   0.23 kB
+dist/public/assets/index-CgcnyluV.js                     0.32 kB │ gzip:   0.25 kB
+dist/public/assets/shield-check-quxfnrGN.js              0.32 kB │ gzip:   0.25 kB
+dist/public/assets/chevron-right-BZTu1SBL.js             0.32 kB │ gzip:   0.25 kB
+dist/public/assets/file-text-BKZGPSFq.js                 0.33 kB │ gzip:   0.22 kB
+dist/public/assets/input-BQTfEaXQ.js                     0.56 kB │ gzip:   0.36 kB
+dist/public/assets/building-CO--OkE3.js                  0.56 kB │ gzip:   0.28 kB
+dist/public/assets/cpu-RdCJrK-7.js                       0.64 kB │ gzip:   0.29 kB
+dist/public/assets/badge-qhx6dSdK.js                     0.74 kB │ gzip:   0.40 kB
+dist/public/assets/index-Chjiymov.js                     0.87 kB │ gzip:   0.52 kB
+dist/public/assets/PageSEO-Ba_J3fBw.js                   1.01 kB │ gzip:   0.44 kB
+dist/public/assets/ThemeToggle-DyYMngRW.js               1.43 kB │ gzip:   0.77 kB
+dist/public/assets/ApplicationSuccessPage-CK5oEj5L.js    1.55 kB │ gzip:   0.78 kB
+dist/public/assets/AdminLogin-vxuYFjrE.js                2.77 kB │ gzip:   1.27 kB
+dist/public/assets/ForgotPassword-_ii84JQt.js            2.80 kB │ gzip:   1.24 kB
+dist/public/assets/AdminChangePassword-CM8yB_hp.js       3.26 kB │ gzip:   1.27 kB
+dist/public/assets/ResetPassword-DQ_7f6Fa.js             3.52 kB │ gzip:   1.39 kB
+dist/public/assets/StartApplicationPage-D7KfKHNj.js      4.52 kB │ gzip:   1.79 kB
+dist/public/assets/StatsSection-BYC0wYYk.js              4.55 kB │ gzip:   1.88 kB
+dist/public/assets/AdminLayout-BZEI4JTp.js               4.78 kB │ gzip:   1.80 kB
+dist/public/assets/JobsPage-BxN6XWQb.js                  5.72 kB │ gzip:   1.83 kB
+dist/public/assets/AdminApplications-B6-8xrJh.js         5.83 kB │ gzip:   2.03 kB
+dist/public/assets/ContactPage-DGFgaFKN.js               6.22 kB │ gzip:   1.96 kB
+dist/public/assets/tabs-CAqcDzpM.js                      6.95 kB │ gzip:   2.77 kB
+dist/public/assets/AboutPage-BIMXgllZ.js                 8.45 kB │ gzip:   2.92 kB
+dist/public/assets/PublicLayout-DIKWAknr.js              8.86 kB │ gzip:   2.95 kB
+dist/public/assets/DisclaimerPage-qJrew5LY.js            9.48 kB │ gzip:   3.14 kB
+dist/public/assets/BusinessSolutionsPage-CKJELFub.js     9.96 kB │ gzip:   3.67 kB
+dist/public/assets/JobDetailPage-Bax9KJDY.js            10.39 kB │ gzip:   3.05 kB
+dist/public/assets/PrivacyPolicyPage-DL8yB5SW.js        13.18 kB │ gzip:   4.53 kB
+dist/public/assets/HomePage-BcsQVUEN.js                 15.07 kB │ gzip:   4.37 kB
+dist/public/assets/AdminJobs-B5nmZCvp.js                18.49 kB │ gzip:   5.82 kB
+dist/public/assets/AdminApplicationDetail-DN5WX4q6.js   19.08 kB │ gzip:   4.12 kB
+dist/public/assets/api-n_AZ33ni.js                      19.46 kB │ gzip:   5.42 kB
+dist/public/assets/format-BBErTw00.js                   19.48 kB │ gzip:   5.54 kB
+dist/public/assets/select-BdLSgEV4.js                   39.28 kB │ gzip:  13.69 kB
+dist/public/assets/ApplicationWizard-jjzOM1sr.js        52.72 kB │ gzip:  14.49 kB
+dist/public/assets/form-Dx7mSv_t.js                     88.93 kB │ gzip:  24.92 kB
+dist/public/assets/index-C57PMmZN.js                   346.31 kB │ gzip: 112.50 kB
+dist/public/assets/AdminDashboard-h-VZ_x-r.js          385.38 kB │ gzip: 106.31 kB
+✓ built in 5.89s
+==> Uploading build...
+==> Your site is live 🎉
