@@ -3,6 +3,66 @@ import { Link } from "wouter";
 import { PublicLayout } from "../../components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ShieldCheck, Users, TrendingUp, Lightbulb, MapPin, Target } from "lucide-react";
+import { StatsSection, StatDef } from "../../components/StatsSection";
+
+const ABOUT_STATS: StatDef[] = [
+  {
+    value: 500,
+    suffix: "+",
+    label: "Professionals Engaged",
+    sublabel: "Placed across multiple industries",
+    Icon: Users,
+    accent: {
+      bar: "bg-blue-500",
+      iconBg: "bg-blue-500/15",
+      iconText: "text-blue-400",
+      number: "text-blue-400",
+      glow: "radial-gradient(ellipse 120px 60px at 50% 60%, rgba(59,130,246,0.18) 0%, transparent 100%)",
+    },
+  },
+  {
+    value: 12,
+    suffix: "",
+    label: "States Reached",
+    sublabel: "Nationwide presence in Nigeria",
+    Icon: MapPin,
+    accent: {
+      bar: "bg-emerald-500",
+      iconBg: "bg-emerald-500/15",
+      iconText: "text-emerald-400",
+      number: "text-emerald-400",
+      glow: "radial-gradient(ellipse 120px 60px at 50% 60%, rgba(16,185,129,0.18) 0%, transparent 100%)",
+    },
+  },
+  {
+    value: 3,
+    suffix: "+",
+    label: "Years of Operation",
+    sublabel: "Growing stronger every year",
+    Icon: TrendingUp,
+    accent: {
+      bar: "bg-violet-500",
+      iconBg: "bg-violet-500/15",
+      iconText: "text-violet-400",
+      number: "text-violet-400",
+      glow: "radial-gradient(ellipse 120px 60px at 50% 60%, rgba(139,92,246,0.18) 0%, transparent 100%)",
+    },
+  },
+  {
+    value: 100,
+    suffix: "%",
+    label: "Compliance Focused",
+    sublabel: "Nigerian labour law aligned",
+    Icon: ShieldCheck,
+    accent: {
+      bar: "bg-amber-500",
+      iconBg: "bg-amber-500/15",
+      iconText: "text-amber-400",
+      number: "text-amber-400",
+      glow: "radial-gradient(ellipse 120px 60px at 50% 60%, rgba(245,158,11,0.18) 0%, transparent 100%)",
+    },
+  },
+];
 
 const values = [
   {
@@ -135,23 +195,7 @@ export function AboutPage() {
       </section>
 
       {/* Stats */}
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto text-center">
-            {[
-              { value: "500+", label: "Professionals Engaged" },
-              { value: "12", label: "States Reached" },
-              { value: "3+", label: "Years of Operation" },
-              { value: "100%", label: "Compliance Focused" },
-            ].map((stat) => (
-              <div key={stat.label}>
-                <div className="text-4xl font-bold mb-1">{stat.value}</div>
-                <div className="text-sm text-primary-foreground/75 uppercase tracking-wider">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <StatsSection stats={ABOUT_STATS} />
 
       {/* CTA */}
       <section className="py-20 bg-background/75 backdrop-blur-sm">

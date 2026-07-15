@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { PublicLayout } from "../../components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
@@ -90,6 +90,90 @@ const whyUs = [
   "Full compliance with Nigerian labour laws and corporate governance standards",
 ];
 
+const PHASES = [
+  {
+    step: "01",
+    title: "Discovery",
+    desc: "We start with a detailed conversation to understand your business objectives, challenges, and requirements.",
+    color: { bar: "bg-blue-500", glow: "rgba(59,130,246,0.12)", num: "text-blue-500/30" },
+  },
+  {
+    step: "02",
+    title: "Solution Design",
+    desc: "Our team designs a tailored solution — workforce, technology, or consulting — with clear deliverables and timelines.",
+    color: { bar: "bg-violet-500", glow: "rgba(139,92,246,0.12)", num: "text-violet-500/30" },
+  },
+  {
+    step: "03",
+    title: "Delivery & Support",
+    desc: "We execute with discipline, keep you informed throughout, and remain available to support and adjust as your needs evolve.",
+    color: { bar: "bg-emerald-500", glow: "rgba(16,185,129,0.12)", num: "text-emerald-500/30" },
+  },
+];
+
+function HowWeWorkSection() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
+      { threshold: 0.2 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section className="py-20 bg-background/75 backdrop-blur-sm">
+      <div className="container mx-auto px-4 max-w-4xl">
+        <div className="text-center mb-14">
+          <h2 className="text-3xl font-bold mb-4 tracking-tight">How We Work</h2>
+          <p className="text-muted-foreground text-lg">
+            A straightforward, structured engagement process designed to deliver value quickly.
+          </p>
+        </div>
+        <div ref={ref} className="grid sm:grid-cols-3 gap-6">
+          {PHASES.map((phase, i) => (
+            <div
+              key={phase.step}
+              className="relative bg-card border rounded-2xl p-7 shadow-sm text-center overflow-hidden"
+              style={{
+                opacity: visible ? 1 : 0,
+                transform: visible ? "translateY(0)" : "translateY(28px)",
+                transition: `opacity 0.55s ease ${i * 140}ms, transform 0.55s ease ${i * 140}ms`,
+              }}
+            >
+              {/* subtle coloured top bar */}
+              <span
+                className={`absolute top-0 left-6 right-6 h-[2px] ${phase.color.bar} rounded-full`}
+                style={{
+                  opacity: visible ? 1 : 0,
+                  transition: `opacity 0.4s ease ${i * 140 + 350}ms`,
+                }}
+              />
+              {/* ambient glow */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: `radial-gradient(ellipse 160px 80px at 50% 30%, ${phase.color.glow} 0%, transparent 100%)`,
+                }}
+              />
+              <div className={`relative text-5xl font-extrabold ${phase.color.num} mb-4 tracking-tight`}>
+                {phase.step}
+              </div>
+              <h3 className="relative font-bold text-lg mb-3">{phase.title}</h3>
+              <p className="relative text-muted-foreground text-sm leading-relaxed">{phase.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function BusinessSolutionsPage() {
   return (
     <PublicLayout>
@@ -159,29 +243,7 @@ export function BusinessSolutionsPage() {
       </section>
 
       {/* How We Work */}
-      <section className="py-20 bg-background/75 backdrop-blur-sm">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl font-bold mb-4 tracking-tight">How We Work</h2>
-            <p className="text-muted-foreground text-lg">
-              A straightforward, structured engagement process designed to deliver value quickly.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-3 gap-6">
-            {[
-              { step: "01", title: "Discovery", desc: "We start with a detailed conversation to understand your business objectives, challenges, and requirements." },
-              { step: "02", title: "Solution Design", desc: "Our team designs a tailored solution — workforce, technology, or consulting — with clear deliverables and timelines." },
-              { step: "03", title: "Delivery & Support", desc: "We execute with discipline, keep you informed throughout, and remain available to support and adjust as your needs evolve." },
-            ].map((phase) => (
-              <div key={phase.step} className="bg-card border rounded-2xl p-7 shadow-sm text-center">
-                <div className="text-4xl font-bold text-primary/20 mb-3">{phase.step}</div>
-                <h3 className="font-bold text-lg mb-3">{phase.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{phase.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <HowWeWorkSection />
 
       {/* CTA */}
       <section className="py-20 bg-primary text-primary-foreground">
