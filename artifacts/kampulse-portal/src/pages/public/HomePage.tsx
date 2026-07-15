@@ -22,9 +22,11 @@ export function HomePage() {
       <section className="relative text-primary-foreground overflow-hidden min-h-[600px] md:min-h-[700px] flex items-center">
         {/* Full-bleed background photo */}
         <img
-          src="/images/hero-handshake.jpg"
+          src="/images/hero-handshake.webp"
           alt="Professional recruitment handshake in a modern office"
           loading="eager"
+          fetchPriority="high"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
         {/* Dark overlay for text legibility */}
@@ -135,9 +137,10 @@ export function HomePage() {
             <div className="relative order-first md:order-last">
               <div className="aspect-[4/3] md:aspect-square rounded-2xl overflow-hidden border border-border shadow-xl relative">
                 <img
-                  src="/images/about-consultation.jpg"
+                  src="/images/about-consultation.webp"
                   alt="Kampulse team member consulting with a candidate in the office"
                   loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover object-center"
                 />
                 {/* Subtle blue-tinted overlay to tie into brand palette */}
@@ -169,9 +172,10 @@ export function HomePage() {
             {/* Side photo: two young professionals */}
             <div className="relative rounded-2xl overflow-hidden shadow-xl aspect-[4/3] lg:aspect-auto lg:h-80">
               <img
-                src="/images/why-choose-team.jpg"
+                src="/images/why-choose-team.webp"
                 alt="Young professionals in a business discussion"
                 loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover object-center"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent" />
@@ -247,37 +251,37 @@ export function HomePage() {
               {
                 title: "Online Application",
                 desc: "Complete your application through our secure recruitment portal.",
-                photo: "/images/process-online-application.png",
+                photo: "/images/process-online-application.webp",
                 photoAlt: "Hand holding a phone with the Kampulse recruitment app open",
               },
               {
                 title: "Document Verification",
                 desc: "Submit your identification, qualifications, and supporting documents for verification.",
-                photo: "/images/process-document-verification.jpg",
+                photo: "/images/process-document-verification.webp",
                 photoAlt: "Person ticking off a digital checklist on a tablet with a stylus",
               },
               {
                 title: "Background & Guarantor Verification",
                 desc: "We verify information provided to maintain trust and workplace security.",
-                photo: "/images/process-background-verification.png",
+                photo: "/images/process-background-verification.webp",
                 photoAlt: "Kampulse guarantor vetting form printed and placed on a wooden desk",
               },
               {
                 title: "Application Assessment",
                 desc: "Our recruitment team carefully evaluates your experience and suitability.",
-                photo: "/images/process-application-assessment.jpg",
+                photo: "/images/process-application-assessment.webp",
                 photoAlt: "Two professionals reviewing and signing formal application documents",
               },
               {
                 title: "Interview & Evaluation",
                 desc: "Qualified candidates participate in interviews and role-specific assessments.",
-                photo: "/images/process-interview-evaluation.jpg",
+                photo: "/images/process-interview-evaluation.webp",
                 photoAlt: "Recruiter conducting a one-on-one interview with a candidate",
               },
               {
                 title: "Offer & Onboarding",
                 desc: "Successful applicants receive a formal employment offer, complete documentation, and begin onboarding.",
-                photo: "/images/process-agreement.jpg",
+                photo: "/images/process-agreement.webp",
                 photoAlt: "Employment agreement documents ready for signing",
               },
             ].map((step, i) => (
@@ -316,7 +320,7 @@ export function HomePage() {
         {/* "We Are Hiring" photo as section background */}
         <div className="absolute inset-0">
           <img
-            src="/images/hiring-sign.jpg"
+            src="/images/hiring-sign.webp"
             alt=""
             aria-hidden="true"
             loading="lazy"

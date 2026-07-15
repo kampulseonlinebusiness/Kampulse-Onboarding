@@ -23,9 +23,12 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
         <div className="container mx-auto px-4 h-24 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-1 group">
             <img
-              src="/images/kampulse-logo.png"
+              src="/images/kampulse-logo.webp"
               alt="Kampulse Handling Solutions Ltd"
-              className="h-20 sm:h-20 w-auto object-contain group-hover:scale-105 transition-transform rounded-xl drop-shadow-lg"
+              fetchPriority="high"
+              decoding="async"
+              width="160" height="80"
+              className="h-16 sm:h-20 w-auto object-contain group-hover:scale-105 transition-transform rounded-xl drop-shadow-lg"
             />
           </Link>
 
@@ -91,9 +94,11 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-5">
               <img
-                src="/images/kampulse-logo.png"
+                src="/images/kampulse-logo.webp"
                 alt="Kampulse Handling Solutions Ltd"
-                className="h-28 w-auto object-contain rounded-xl drop-shadow-lg"
+                loading="lazy"
+                decoding="async"
+                className="h-24 w-auto object-contain rounded-xl drop-shadow-lg"
               />
             </Link>
             <p className="text-muted-foreground text-sm leading-relaxed">

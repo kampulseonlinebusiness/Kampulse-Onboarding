@@ -59,7 +59,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       <div className="md:hidden flex items-center justify-between p-4 bg-sidebar/90 backdrop-blur border-b border-sidebar-border text-sidebar-foreground">
         <div className="flex items-center gap-2">
           <img
-            src="/images/kampulse-logo.png"
+            src="/images/kampulse-logo.webp"
             alt="Kampulse Handling Solutions Ltd"
             className="h-16 w-auto object-contain rounded-xl drop-shadow-lg"
           />
@@ -77,7 +77,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       >
         <div className="hidden md:flex px-6 py-5 items-center justify-center border-b border-sidebar-border/50">
           <img
-            src="/images/kampulse-logo.png"
+            src="/images/kampulse-logo.webp"
             alt="Kampulse Handling Solutions Ltd"
             className="h-28 w-auto object-contain rounded-xl drop-shadow-lg"
           />

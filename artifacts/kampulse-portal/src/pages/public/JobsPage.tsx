@@ -81,14 +81,19 @@ function JobCard({ job }: { job: { id: number; title: string; location: string; 
           )}
         </div>
 
-        <div className="pt-4 border-t flex items-center justify-between gap-3">
-          <Link href={`/jobs/${job.id}`} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap">
-            View Details
-          </Link>
-          <Link href={`/jobs/${job.id}`} className="flex-1 max-w-[160px] ml-auto">
-            <Button size="sm" className="w-full gap-1 rounded-lg">
+        <div className="pt-4 border-t space-y-2">
+          <Link href={`/jobs/${job.id}`} className="block w-full">
+            <Button
+              className="w-full gap-2 font-semibold rounded-xl py-5 h-auto text-sm bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md transition-all"
+            >
               Apply Now <ChevronRight className="w-4 h-4" />
             </Button>
+          </Link>
+          <Link
+            href={`/jobs/${job.id}`}
+            className="block w-full text-center text-xs text-muted-foreground hover:text-foreground transition-colors py-1"
+          >
+            View full details
           </Link>
         </div>
       </div>

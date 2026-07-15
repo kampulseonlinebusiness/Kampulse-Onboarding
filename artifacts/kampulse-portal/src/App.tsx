@@ -3,6 +3,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Route, Switch, Router as WouterRouter, Redirect } from 'wouter';
 import NotFound from '@/pages/not-found';
+import { ScrollToTop } from '@/components/ScrollToTop';
 
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { AuthProvider } from '@/hooks/use-auth';
@@ -65,6 +66,7 @@ function App() {
         <AuthProvider>
           <TooltipProvider>
             <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+              <ScrollToTop />
               <Router />
             </WouterRouter>
             <Toaster />

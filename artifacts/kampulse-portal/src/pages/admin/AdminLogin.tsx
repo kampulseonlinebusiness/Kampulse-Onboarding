@@ -70,7 +70,7 @@ export function AdminLogin() {
       <div className="bg-card border rounded-2xl shadow-xl overflow-hidden">
         <div className="p-8 text-center border-b bg-muted/10">
           <img
-            src="/images/kampulse-logo.png"
+            src="/images/kampulse-logo.webp"
             alt="Kampulse Handling Solutions Ltd"
             className="h-36 w-auto mx-auto mb-4 rounded-xl object-contain drop-shadow-xl"
           />
