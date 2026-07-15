@@ -1,13 +1,7 @@
 import PDFDocument from "pdfkit";
-import fs from "fs";
-import path from "path";
 import { randomUUID } from "crypto";
-import { ensureUploadDirs } from "./uploads";
+import { uploadFile } from "./storage";
 import type { Application } from "@workspace/db";
-
-ensureUploadDirs();
-
-const PDF_DIR = path.resolve(process.cwd(), "uploads", "generated-pdf");
 
 interface ApplicationWithJob extends Application {
   jobTitle: string;
@@ -15,14 +9,24 @@ interface ApplicationWithJob extends Application {
   notes: Array<{ content: string; createdBy: string | null; createdAt: Date }>;
 }
 
+/**
+ * Generate a PDF summary for an application and upload it to storage.
+ * Returns the public URL (R2 or local) of the generated file.
+ */
 export async function generateApplicationPdf(application: ApplicationWithJob): Promise<string> {
-  const filename = `application-${application.id}-${randomUUID()}.pdf`;
-  const filepath = path.join(PDF_DIR, filename);
+  const buffer = await buildPdfBuffer(application);
+  const key = `generated-pdf/application-${application.id}-${randomUUID()}.pdf`;
+  return uploadFile(buffer, key, "application/pdf");
+}
 
+function buildPdfBuffer(application: ApplicationWithJob): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({ margin: 50 });
-    const stream = fs.createWriteStream(filepath);
-    doc.pipe(stream);
+    const chunks: Buffer[] = [];
+
+    doc.on("data", (chunk: Buffer) => chunks.push(chunk));
+    doc.on("end", () => resolve(Buffer.concat(chunks)));
+    doc.on("error", reject);
 
     // Header
     doc.rect(0, 0, doc.page.width, 80).fill("#1e3a5f");
@@ -50,72 +54,48 @@ export async function generateApplicationPdf(application: ApplicationWithJob): P
       doc.moveDown();
       doc.fillColor("#1e3a5f").fontSize(14).text("Personal Information", { underline: true });
       doc.fillColor("#333").fontSize(11);
-      doc.text(`Full Name: ${application.fullName ?? "N/A"}`);
+      doc.text(`Full Name: ${application.fullName}`);
       doc.text(`Date of Birth: ${application.dateOfBirth ?? "N/A"}`);
       doc.text(`Gender: ${application.gender ?? "N/A"}`);
       doc.text(`Nationality: ${application.nationality ?? "N/A"}`);
-      doc.text(`State of Origin: ${application.stateOfOrigin ?? "N/A"}`);
-      doc.text(`LGA: ${application.lga ?? "N/A"}`);
-      doc.text(`Marital Status: ${application.maritalStatus ?? "N/A"}`);
-      doc.text(`Address: ${application.address ?? "N/A"}`);
       doc.text(`Phone: ${application.phone ?? "N/A"}`);
       doc.text(`Email: ${application.email ?? "N/A"}`);
-      const literacyLabel = application.computerLiteracy === "proficient"
-        ? "Yes — Proficient"
-        : application.computerLiteracy === "basic"
-          ? "Yes — Basic Knowledge"
-          : application.computerLiteracy === "none"
-            ? "No — Not computer literate"
-            : "N/A";
-      doc.text(`Computer Literacy: ${literacyLabel}`);
-
-      doc.moveDown(0.5);
-      doc.fillColor("#1e3a5f").fontSize(12).text("Next of Kin");
-      doc.fillColor("#333").fontSize(11);
-      doc.text(`Name: ${application.nextOfKinName ?? "N/A"}`);
-      doc.text(`Relationship: ${application.nextOfKinRelationship ?? "N/A"}`);
-      doc.text(`Phone: ${application.nextOfKinPhone ?? "N/A"}`);
+      doc.text(`Address: ${application.address ?? "N/A"}`);
     }
 
-    // Guarantor
-    if (application.guarantorFullName) {
+    // Employment History
+    if (application.previousEmployer) {
+      doc.moveDown();
+      doc.fillColor("#1e3a5f").fontSize(14).text("Employment History", { underline: true });
+      doc.fillColor("#333").fontSize(11);
+      doc.text(`Previous Employer: ${application.previousEmployer}`);
+      doc.text(`Previous Job Title: ${application.previousJobTitle ?? "N/A"}`);
+      doc.text(`Reason for Leaving: ${application.reasonForLeaving ?? "N/A"}`);
+    }
+
+    // Guarantor Info
+    if (application.guarantorName) {
       doc.moveDown();
       doc.fillColor("#1e3a5f").fontSize(14).text("Guarantor Information", { underline: true });
       doc.fillColor("#333").fontSize(11);
-      doc.text(`Name: ${application.guarantorFullName ?? "N/A"}`);
-      doc.text(`Address: ${application.guarantorAddress ?? "N/A"}`);
-      doc.text(`Occupation: ${application.guarantorOccupation ?? "N/A"}`);
-      doc.text(`Place of Work: ${application.guarantorPlaceOfWork ?? "N/A"}`);
-      doc.text(`Phone: ${application.guarantorPhone ?? "N/A"}`);
+      doc.text(`Guarantor Name: ${application.guarantorName}`);
       doc.text(`Relationship: ${application.guarantorRelationship ?? "N/A"}`);
-      doc.text(`Years Known: ${application.guarantorYearsKnown ?? "N/A"}`);
-      doc.text(`ID Type: ${application.guarantorIdType ?? "N/A"}`);
-      doc.text(`ID Number: ${application.guarantorIdNumber ?? "N/A"}`);
+      doc.text(`Phone: ${application.guarantorPhone ?? "N/A"}`);
+      doc.text(`Address: ${application.guarantorAddress ?? "N/A"}`);
     }
 
-    // Documents
-    if (application.documents.length > 0) {
+    // Documents submitted
+    if (application.documents?.length) {
       doc.moveDown();
-      doc.fillColor("#1e3a5f").fontSize(14).text("Uploaded Documents", { underline: true });
+      doc.fillColor("#1e3a5f").fontSize(14).text("Documents Submitted", { underline: true });
       doc.fillColor("#333").fontSize(11);
-      for (const doc_ of application.documents) {
-        doc.text(`• ${doc_.fileType.replace(/_/g, " ")}: ${doc_.fileName}`);
+      for (const d of application.documents) {
+        doc.text(`• ${d.fileType.replace(/_/g, " ")}: ${d.fileName}`);
       }
     }
 
-    // Agreement
-    doc.moveDown();
-    doc.fillColor("#1e3a5f").fontSize(14).text("Employment Agreement", { underline: true });
-    doc.fillColor("#333").fontSize(11);
-    doc.text(`Agreement Accepted: ${application.agreedToTerms ? "Yes" : "No"}`);
-    doc.text(`Name Confirmation: ${application.fullNameConfirmation ?? "N/A"}`);
-    if (application.agreementSignedAt) {
-      doc.text(`Signed At: ${new Date(application.agreementSignedAt).toLocaleString("en-NG")}`);
-    }
-    doc.text(`IP Address: ${application.agreementIpAddress ?? "N/A"}`);
-
     // Admin Notes
-    if (application.notes.length > 0) {
+    if (application.notes?.length) {
       doc.moveDown();
       doc.fillColor("#1e3a5f").fontSize(14).text("Admin Notes", { underline: true });
       doc.fillColor("#333").fontSize(11);
@@ -127,10 +107,11 @@ export async function generateApplicationPdf(application: ApplicationWithJob): P
 
     // Footer
     doc.moveDown(2);
-    doc.fontSize(9).fillColor("#888").text(`Generated on ${new Date().toLocaleString("en-NG")} — Kampulse Handling Solutions Ltd`, { align: "center" });
+    doc.fontSize(9).fillColor("#888").text(
+      `Generated on ${new Date().toLocaleString("en-NG")} — Kampulse Handling Solutions Ltd`,
+      { align: "center" },
+    );
 
     doc.end();
-    stream.on("finish", () => resolve(`/api/uploads/files/generated-pdf/${filename}`));
-    stream.on("error", reject);
   });
 }

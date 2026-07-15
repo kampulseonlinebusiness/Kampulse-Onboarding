@@ -1,35 +1,30 @@
 import { Router, type IRouter } from "express";
 import express from "express";
-import path from "path";
-import fs from "fs";
 import { db } from "@workspace/db";
 import { applicationsTable, documentsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import {
   createUploader,
-  getFileUrl,
-  ensureUploadDirs,
   validateFileMagicBytes,
+  makeStorageKey,
 } from "../lib/uploads";
+import { uploadFile, deleteFile, ensureUploadDirs, UPLOAD_BASE } from "../lib/storage";
 import multer from "multer";
 
 ensureUploadDirs();
 
 const router: IRouter = Router();
 
-const UPLOAD_BASE = path.resolve(process.cwd(), "uploads");
-
 const VALID_FILE_TYPES = [
   "passport", "cv", "certificate", "id", "proof_of_address",
   "medical", "guarantor_passport", "guarantor_id",
 ];
 
-// Serve uploaded files statically.
-// express.static handles path traversal protection and correct MIME types.
-// Must be registered before the admin router's global requireAuth middleware.
+// Serve uploaded files statically (local dev fallback; R2 files are served
+// directly from the CDN so this is only hit in non-R2 environments).
 router.use("/uploads/files", express.static(UPLOAD_BASE, { fallthrough: false }));
 
-// Upload document
+// ── POST /uploads/:token — upload a document for an application ───────────────
 router.post("/uploads/:token", async (req, res): Promise<void> => {
   const { token } = req.params;
   const rawFileType = req.query["fileType"];
@@ -68,20 +63,18 @@ router.post("/uploads/:token", async (req, res): Promise<void> => {
       return;
     }
 
-    // ── Magic-bytes validation ────────────────────────────────────────────────
-    // Verify the actual file content matches an allowed type regardless of the
-    // declared Content-Type or file extension.
-    const magicError = validateFileMagicBytes(req.file.path, fileType as string);
+    // ── Magic-bytes validation (buffer-based) ─────────────────────────────────
+    const magicError = validateFileMagicBytes(req.file.buffer, fileType as string);
     if (magicError) {
-      // Delete the already-written file before rejecting the request.
-      try { fs.unlinkSync(req.file.path); } catch { /* ignore cleanup error */ }
       res.status(400).json({ error: magicError });
       return;
     }
 
-    const fileUrl = getFileUrl(req.file.path);
+    // ── Upload to storage (R2 or local disk) ──────────────────────────────────
+    const key = makeStorageKey(fileType as string, req.file.originalname);
+    const fileUrl = await uploadFile(req.file.buffer, key, req.file.mimetype);
 
-    // Remove old document of same type
+    // ── Remove old document of same type ──────────────────────────────────────
     const existing = await db
       .select()
       .from(documentsTable)
@@ -89,16 +82,16 @@ router.post("/uploads/:token", async (req, res): Promise<void> => {
 
     const old = existing.find(d => d.fileType === fileType);
     if (old) {
-      try { fs.unlinkSync(old.filePath); } catch { /* ignore */ }
+      await deleteFile(old.filePath); // handles both keys and legacy disk paths
       await db.delete(documentsTable).where(eq(documentsTable.id, old.id));
     }
 
-    // Save document record
+    // ── Save document record ──────────────────────────────────────────────────
     await db.insert(documentsTable).values({
       applicationId: application.id,
       fileType: fileType as string,
       fileName: req.file.originalname,
-      filePath: req.file.path,
+      filePath: key,   // storage key (not a disk path)
       fileUrl,
       mimeType: req.file.mimetype,
       fileSize: req.file.size,
@@ -107,7 +100,7 @@ router.post("/uploads/:token", async (req, res): Promise<void> => {
     req.log.info({ applicationId: application.id, fileType }, "Document uploaded");
     res.json({
       fileType,
-      filePath: req.file.path,
+      filePath: key,
       fileName: req.file.originalname,
       fileUrl,
     });

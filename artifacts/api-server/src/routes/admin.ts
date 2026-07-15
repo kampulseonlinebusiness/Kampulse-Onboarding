@@ -1,7 +1,7 @@
 import { Router, type IRouter } from "express";
-import fs from "fs";
-import path from "path";
 import multer from "multer";
+import { randomUUID } from "crypto";
+import path from "path";
 import { db } from "@workspace/db";
 import {
   applicationsTable,
@@ -26,7 +26,8 @@ import {
 import { requireAuth } from "../middlewares/requireAuth";
 import { generateApplicationPdf } from "../lib/pdf";
 import { sendStatusUpdateEmail } from "../lib/email";
-import { createImageUploader, getFileUrl } from "../lib/uploads";
+import { createImageUploader } from "../lib/uploads";
+import { uploadFile, deleteFile } from "../lib/storage";
 
 const jobPhotoUploader = createImageUploader("job-photos");
 
@@ -142,21 +143,20 @@ router.post("/admin/jobs/:id/photo", (req, res): void => {
     const [existing] = await db.select({ id: jobsTable.id, photoUrl: jobsTable.photoUrl })
       .from(jobsTable).where(eq(jobsTable.id, id));
     if (!existing) {
-      fs.unlinkSync(req.file.path);
       res.status(404).json({ error: "Job not found" });
       return;
     }
 
-    // Delete old photo file if exists
+    // Delete old photo from storage if one exists
     if (existing.photoUrl) {
-      try {
-        const oldRelative = existing.photoUrl.replace("/api/uploads/files/", "");
-        const oldPath = path.resolve(process.cwd(), "uploads", oldRelative);
-        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
-      } catch { /* ignore */ }
+      await deleteFile(existing.photoUrl).catch(() => { /* ignore */ });
     }
 
-    const photoUrl = getFileUrl(req.file.path);
+    // Upload new photo to storage (R2 or local disk)
+    const ext = path.extname(req.file.originalname);
+    const key = `job-photos/${randomUUID()}${ext}`;
+    const photoUrl = await uploadFile(req.file.buffer, key, req.file.mimetype);
+
     const [job] = await db.update(jobsTable).set({ photoUrl }).where(eq(jobsTable.id, id)).returning();
     res.json({ photoUrl: job.photoUrl });
   });
@@ -172,11 +172,7 @@ router.delete("/admin/jobs/:id/photo", async (req, res): Promise<void> => {
   if (!existing) { res.status(404).json({ error: "Job not found" }); return; }
 
   if (existing.photoUrl) {
-    try {
-      const oldRelative = existing.photoUrl.replace("/api/uploads/files/", "");
-      const oldPath = path.resolve(process.cwd(), "uploads", oldRelative);
-      if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
-    } catch { /* ignore */ }
+    await deleteFile(existing.photoUrl).catch(() => { /* ignore */ });
   }
 
   await db.update(jobsTable).set({ photoUrl: null }).where(eq(jobsTable.id, id));

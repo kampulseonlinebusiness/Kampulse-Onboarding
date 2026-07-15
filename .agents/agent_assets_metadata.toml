@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "Y4PaYfjNaPMeqWFJZIKtr"
+uri = "file://kampulse-db-export.sql"
+type = "unspecified"
+title = "Kampulse Database Export (SQL)"

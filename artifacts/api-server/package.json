@@ -10,6 +10,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1086.0",
     "@types/pdfkit": "^0.17.6",
     "@workspace/api-zod": "workspace:*",
     "@workspace/db": "workspace:*",
