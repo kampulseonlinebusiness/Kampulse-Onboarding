@@ -5,8 +5,12 @@ import fs from "fs";
 import { db } from "@workspace/db";
 import { applicationsTable, documentsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
-import { createUploader, getFileUrl, ensureUploadDirs } from "../lib/uploads";
-import { logger } from "../lib/logger";
+import {
+  createUploader,
+  getFileUrl,
+  ensureUploadDirs,
+  validateFileMagicBytes,
+} from "../lib/uploads";
 import multer from "multer";
 
 ensureUploadDirs();
@@ -37,7 +41,11 @@ router.post("/uploads/:token", async (req, res): Promise<void> => {
   }
 
   // Verify application token
-  const [application] = await db.select().from(applicationsTable).where(eq(applicationsTable.token, token));
+  const [application] = await db
+    .select()
+    .from(applicationsTable)
+    .where(eq(applicationsTable.token, token));
+
   if (!application) {
     res.status(404).json({ error: "Application not found" });
     return;
@@ -60,11 +68,25 @@ router.post("/uploads/:token", async (req, res): Promise<void> => {
       return;
     }
 
+    // ── Magic-bytes validation ────────────────────────────────────────────────
+    // Verify the actual file content matches an allowed type regardless of the
+    // declared Content-Type or file extension.
+    const magicError = validateFileMagicBytes(req.file.path, fileType as string);
+    if (magicError) {
+      // Delete the already-written file before rejecting the request.
+      try { fs.unlinkSync(req.file.path); } catch { /* ignore cleanup error */ }
+      res.status(400).json({ error: magicError });
+      return;
+    }
+
     const fileUrl = getFileUrl(req.file.path);
 
     // Remove old document of same type
-    const existing = await db.select().from(documentsTable)
+    const existing = await db
+      .select()
+      .from(documentsTable)
       .where(eq(documentsTable.applicationId, application.id));
+
     const old = existing.find(d => d.fileType === fileType);
     if (old) {
       try { fs.unlinkSync(old.filePath); } catch { /* ignore */ }
