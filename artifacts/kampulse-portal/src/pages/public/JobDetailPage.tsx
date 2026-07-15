@@ -1,6 +1,7 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "wouter";
+import { resolveMediaUrl } from "@/lib/utils";
 import { PublicLayout } from "../../components/layout/PublicLayout";
 import { PageSEO } from "@/components/PageSEO";
 import { useGetJob, Job } from "@workspace/api-client-react";
@@ -136,7 +137,7 @@ export function JobDetailPage() {
         title={`${job.title} — ${job.location}`}
         description={jobDescription}
         canonicalPath={`/jobs/${job.id}`}
-        image={job.photoUrl ?? undefined}
+        image={resolveMediaUrl(job.photoUrl)}
         ogType="article"
       />
       {/* Google Jobs structured data — JobPosting JSON-LD */}
@@ -149,7 +150,7 @@ export function JobDetailPage() {
       {job.photoUrl ? (
         <div className="relative w-full aspect-[21/9] overflow-hidden bg-muted">
           <img
-            src={job.photoUrl}
+            src={resolveMediaUrl(job.photoUrl)}
             alt={`${job.title} cover`}
             className="w-full h-full object-cover"
           />

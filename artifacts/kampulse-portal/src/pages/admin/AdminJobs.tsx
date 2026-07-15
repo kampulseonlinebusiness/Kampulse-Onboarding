@@ -1,4 +1,5 @@
 import React, { useState, useRef, useCallback } from "react";
+import { resolveMediaUrl } from "@/lib/utils";
 import { AdminLayout } from "../../components/layout/AdminLayout";
 import {
   useListAdminJobs,
@@ -419,7 +420,7 @@ export function AdminJobs() {
                       <div className="flex items-center gap-3">
                         {job.photoUrl ? (
                           <img
-                            src={job.photoUrl}
+                            src={resolveMediaUrl(job.photoUrl)}
                             alt={job.title}
                             className="w-10 h-10 rounded-lg object-cover shrink-0 border"
                           />

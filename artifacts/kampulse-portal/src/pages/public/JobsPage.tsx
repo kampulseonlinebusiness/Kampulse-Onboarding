@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "wouter";
+import { resolveMediaUrl } from "@/lib/utils";
 import { PublicLayout } from "../../components/layout/PublicLayout";
 import { PageSEO } from "@/components/PageSEO";
 import { useListJobs } from "@workspace/api-client-react";
@@ -32,7 +33,7 @@ function JobCard({ job }: { job: { id: number; title: string; location: string; 
       <div className="relative aspect-[16/9] overflow-hidden bg-gradient-to-br from-primary/20 via-primary/10 to-muted">
         {job.photoUrl ? (
           <img
-            src={job.photoUrl}
+            src={resolveMediaUrl(job.photoUrl)}
             alt={`${job.title} cover`}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             loading="lazy"
