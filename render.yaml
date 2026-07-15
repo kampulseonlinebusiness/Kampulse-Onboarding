@@ -1,9 +1,8 @@
 ## Render Blueprint — Kampulse Recruitment Portal
 ## https://render.com/docs/blueprint-spec
 ##
-## This file provisions both services from the same GitHub repo.
-## Set all environment variables marked [REQUIRED] in the Render dashboard
-## before the first deploy.
+## After Render creates the services, go to each service → Environment
+## and fill in all variables that have an empty value below.
 
 services:
 
@@ -11,8 +10,8 @@ services:
   - type: web
     name: kampulse-api
     runtime: node
-    region: frankfurt           # change to "oregon" or "singapore" if preferred
-    plan: starter               # upgrade to "standard" for production load
+    region: frankfurt
+    plan: starter
     rootDir: .
     buildCommand: npm install -g pnpm@10 && pnpm install --frozen-lockfile && pnpm --filter @workspace/api-server run build
     startCommand: node artifacts/api-server/dist/index.mjs
@@ -20,34 +19,32 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        sync: false             # Render injects this automatically
       - key: DATABASE_URL
-        sync: false             # [REQUIRED] paste your Neon/Render Postgres URL
+        value: ""
       - key: SESSION_SECRET
-        sync: false             # [REQUIRED] copy from Replit secrets
+        value: ""
       - key: CORS_ORIGIN
-        sync: false             # [REQUIRED] your Render frontend URL, e.g. https://kampulse.onrender.com
+        value: ""
       - key: CLOUDFLARE_R2_ACCOUNT_ID
-        sync: false             # [REQUIRED] from Cloudflare dashboard
+        value: ""
       - key: CLOUDFLARE_R2_ACCESS_KEY_ID
-        sync: false             # [REQUIRED] R2 API token Access Key ID
+        value: ""
       - key: CLOUDFLARE_R2_SECRET_ACCESS_KEY
-        sync: false             # [REQUIRED] R2 API token Secret Access Key
+        value: ""
       - key: CLOUDFLARE_R2_BUCKET
-        sync: false             # [REQUIRED] your R2 bucket name
+        value: ""
       - key: CLOUDFLARE_R2_PUBLIC_URL
-        sync: false             # [REQUIRED] e.g. https://pub-xxx.r2.dev (or custom domain)
+        value: ""
       - key: SMTP_HOST
-        sync: false             # optional — needed for password-reset emails
+        value: ""
       - key: SMTP_PORT
-        sync: false
+        value: ""
       - key: SMTP_USER
-        sync: false
+        value: ""
       - key: SMTP_PASS
-        sync: false
+        value: ""
       - key: SMTP_FROM
-        sync: false
+        value: ""
 
   # ── Frontend (Static Site) ──────────────────────────────────────────────────
   - type: web
@@ -70,4 +67,4 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_URL
-        sync: false             # [REQUIRED] your Render API URL, e.g. https://kampulse-api.onrender.com
+        value: ""
