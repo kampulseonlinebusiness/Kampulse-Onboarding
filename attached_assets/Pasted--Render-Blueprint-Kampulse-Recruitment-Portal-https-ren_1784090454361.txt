@@ -1,0 +1,73 @@
+## Render Blueprint — Kampulse Recruitment Portal
+## https://render.com/docs/blueprint-spec
+##
+## This file provisions both services from the same GitHub repo.
+## Set all environment variables marked [REQUIRED] in the Render dashboard
+## before the first deploy.
+
+services:
+
+  # ── API Server (Node.js) ────────────────────────────────────────────────────
+  - type: web
+    name: kampulse-api
+    runtime: node
+    region: frankfurt           # change to "oregon" or "singapore" if preferred
+    plan: starter               # upgrade to "standard" for production load
+    rootDir: .
+    buildCommand: npm install -g pnpm@10 && pnpm install --frozen-lockfile && pnpm --filter @workspace/api-server run build
+    startCommand: node artifacts/api-server/dist/index.mjs
+    healthCheckPath: /api/jobs
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        sync: false             # Render injects this automatically
+      - key: DATABASE_URL
+        sync: false             # [REQUIRED] paste your Neon/Render Postgres URL
+      - key: SESSION_SECRET
+        sync: false             # [REQUIRED] copy from Replit secrets
+      - key: CORS_ORIGIN
+        sync: false             # [REQUIRED] your Render frontend URL, e.g. https://kampulse.onrender.com
+      - key: CLOUDFLARE_R2_ACCOUNT_ID
+        sync: false             # [REQUIRED] from Cloudflare dashboard
+      - key: CLOUDFLARE_R2_ACCESS_KEY_ID
+        sync: false             # [REQUIRED] R2 API token Access Key ID
+      - key: CLOUDFLARE_R2_SECRET_ACCESS_KEY
+        sync: false             # [REQUIRED] R2 API token Secret Access Key
+      - key: CLOUDFLARE_R2_BUCKET
+        sync: false             # [REQUIRED] your R2 bucket name
+      - key: CLOUDFLARE_R2_PUBLIC_URL
+        sync: false             # [REQUIRED] e.g. https://pub-xxx.r2.dev (or custom domain)
+      - key: SMTP_HOST
+        sync: false             # optional — needed for password-reset emails
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        sync: false
+
+  # ── Frontend (Static Site) ──────────────────────────────────────────────────
+  - type: web
+    name: kampulse-portal
+    runtime: static
+    region: frankfurt
+    rootDir: .
+    buildCommand: npm install -g pnpm@10 && pnpm install --frozen-lockfile && pnpm --filter @workspace/kampulse-portal run build
+    staticPublishPath: artifacts/kampulse-portal/dist
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        sync: false             # [REQUIRED] your Render API URL, e.g. https://kampulse-api.onrender.com
