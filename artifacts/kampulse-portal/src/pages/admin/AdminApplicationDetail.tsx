@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useParams } from "wouter";
+import { resolveMediaUrl } from "@/lib/utils";
 import { AdminLayout } from "../../components/layout/AdminLayout";
 import { 
   useGetAdminApplication, 
@@ -66,21 +67,25 @@ export function AdminApplicationDetail() {
   };
 
   const generatePdf = async () => {
-    // Generate PDF endpoint is assumed to be accessible via fetch
     try {
-      const res = await fetch(`/api/admin/applications/${id}/pdf`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('kampulse_auth') ? JSON.parse(localStorage.getItem('kampulse_auth')!).accessToken : ''}`
-        }
+      const apiBase = (import.meta.env.VITE_API_URL ?? "").replace(/\/+$/, "");
+      const authRaw = localStorage.getItem('kampulse_auth');
+      const token = authRaw ? JSON.parse(authRaw).accessToken : '';
+      const res = await fetch(`${apiBase}/api/admin/applications/${id}/pdf`, {
+        headers: { 'Authorization': `Bearer ${token}` }
       });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error((err as any).error || "PDF generation failed.");
+      }
       const data = await res.json();
       if (data.pdfUrl) {
-        window.open(data.pdfUrl, '_blank');
+        window.open(resolveMediaUrl(data.pdfUrl), '_blank');
       } else {
         toast({ title: "Error", description: "PDF generation failed.", variant: "destructive" });
       }
-    } catch (e) {
-      toast({ title: "Error", description: "Failed to connect to PDF service.", variant: "destructive" });
+    } catch (e: any) {
+      toast({ title: "Error", description: e.message || "Failed to connect to PDF service.", variant: "destructive" });
     }
   };
 
@@ -265,7 +270,7 @@ export function AdminApplicationDetail() {
                               <p className="text-sm text-muted-foreground">{doc.fileName}</p>
                             </div>
                           </div>
-                          <a href={doc.fileUrl} target="_blank" rel="noreferrer">
+                          <a href={resolveMediaUrl(doc.fileUrl)} target="_blank" rel="noreferrer">
                             <Button variant="outline" size="sm" className="gap-2">
                               <ExternalLink className="w-4 h-4"/> View
                             </Button>

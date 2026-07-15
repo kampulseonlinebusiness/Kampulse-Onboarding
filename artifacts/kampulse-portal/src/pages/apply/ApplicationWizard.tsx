@@ -26,7 +26,10 @@ import SignatureCanvas from 'react-signature-canvas';
 const uploadFile = async (token: string, file: File, fileType: string) => {
   const formData = new FormData();
   formData.append("file", file);
-  const res = await fetch(`/api/uploads/${token}?fileType=${fileType}`, {
+  // Use absolute URL so production uploads go to the API server, not the
+  // static site (which would return index.html and cause a JSON parse error).
+  const apiBase = (import.meta.env.VITE_API_URL ?? "").replace(/\/+$/, "");
+  const res = await fetch(`${apiBase}/api/uploads/${token}?fileType=${fileType}`, {
     method: "POST",
     body: formData,
   });
