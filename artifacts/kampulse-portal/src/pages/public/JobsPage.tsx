@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "wouter";
 import { PublicLayout } from "../../components/layout/PublicLayout";
+import { PageSEO } from "@/components/PageSEO";
 import { useListJobs } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Banknote, Briefcase, ChevronRight } from "lucide-react";
@@ -106,6 +107,11 @@ export function JobsPage() {
 
   return (
     <PublicLayout>
+      <PageSEO
+        title="Open Positions"
+        description="Browse current job vacancies at Kampulse Handling Solutions. Find roles in hospitality, logistics, administration, technology, and more across Nigeria. Apply online today."
+        canonicalPath="/jobs"
+      />
       {/* Hero banner */}
       <div className="bg-muted/30 py-14 border-b">
         <div className="container mx-auto px-4">

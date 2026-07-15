@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useParams } from "wouter";
 import { PublicLayout } from "../../components/layout/PublicLayout";
+import { PageSEO } from "@/components/PageSEO";
 import { useGetJob } from "@workspace/api-client-react";
 import { getGetJobQueryKey } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,10 @@ export function JobDetailPage() {
   if (isLoading) {
     return (
       <PublicLayout>
+        <PageSEO
+          title="Job Details"
+          description="Loading job details from Kampulse Handling Solutions Ltd — Nigeria's trusted recruitment partner."
+        />
         <div className="animate-pulse">
           {/* Photo skeleton */}
           <div className="w-full aspect-[21/9] bg-muted" />
@@ -36,6 +41,11 @@ export function JobDetailPage() {
   if (isError || !job) {
     return (
       <PublicLayout>
+        <PageSEO
+          title="Job Not Found"
+          description="This position does not exist or has been closed. Browse all current openings at Kampulse Handling Solutions Ltd."
+          canonicalPath="/jobs"
+        />
         <div className="container mx-auto px-4 py-20 text-center">
           <h2 className="text-2xl font-bold mb-4">Job Not Found</h2>
           <p className="text-muted-foreground mb-8">The position you are looking for does not exist or has been closed.</p>
@@ -47,8 +57,19 @@ export function JobDetailPage() {
     );
   }
 
+  const jobDescription = job.description
+    ? job.description.slice(0, 155).replace(/\s+\S*$/, "") + "…"
+    : `Apply for ${job.title} in ${job.location}. ${job.salary}. Join Kampulse Handling Solutions Ltd.`;
+
   return (
     <PublicLayout>
+      <PageSEO
+        title={`${job.title} — ${job.location}`}
+        description={jobDescription}
+        canonicalPath={`/jobs/${job.id}`}
+        image={job.photoUrl ?? undefined}
+        ogType="article"
+      />
       {/* ── Hero / Cover Photo ── */}
       {job.photoUrl ? (
         <div className="relative w-full aspect-[21/9] overflow-hidden bg-muted">

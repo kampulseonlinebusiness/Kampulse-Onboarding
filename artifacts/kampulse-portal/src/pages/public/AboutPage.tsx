@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "wouter";
 import { PublicLayout } from "../../components/layout/PublicLayout";
+import { PageSEO } from "@/components/PageSEO";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ShieldCheck, Users, TrendingUp, Lightbulb, MapPin, Target } from "lucide-react";
 import { StatsSection, StatDef } from "../../components/StatsSection";
@@ -90,6 +91,11 @@ const values = [
 export function AboutPage() {
   return (
     <PublicLayout>
+      <PageSEO
+        title="About Us"
+        description="Learn about Kampulse Handling Solutions Ltd — Nigeria's recruitment and business solutions company connecting talent with opportunity across the country since 2021."
+        canonicalPath="/about"
+      />
       {/* Hero */}
       <section className="py-20 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 max-w-3xl text-center">

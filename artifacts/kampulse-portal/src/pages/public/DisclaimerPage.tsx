@@ -1,9 +1,15 @@
 import React from "react";
 import { PublicLayout } from "../../components/layout/PublicLayout";
+import { PageSEO } from "@/components/PageSEO";
 
 export function DisclaimerPage() {
   return (
     <PublicLayout>
+      <PageSEO
+        title="Disclaimer"
+        description="Read the legal disclaimer for Kampulse Handling Solutions Ltd, covering job listing accuracy, liability limitations, third-party links, and data handling on this recruitment portal."
+        canonicalPath="/disclaimer"
+      />
       <section className="py-16 bg-background/75 backdrop-blur-sm min-h-[60vh]">
         <div className="container mx-auto px-4 max-w-3xl">
           <div className="mb-10">

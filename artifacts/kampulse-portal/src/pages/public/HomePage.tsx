@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "wouter";
 import { PublicLayout } from "../../components/layout/PublicLayout";
+import { PageSEO } from "@/components/PageSEO";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
@@ -18,6 +19,11 @@ export function HomePage() {
 
   return (
     <PublicLayout>
+      <PageSEO
+        title="Careers &amp; Job Vacancies in Nigeria"
+        description="Explore open positions at Kampulse Handling Solutions Ltd — Nigeria's trusted recruitment and workforce management partner. Apply for jobs in Delta State and across Nigeria today."
+        canonicalPath="/"
+      />
       {/* ── Hero Section ── */}
       <section className="relative text-primary-foreground overflow-hidden min-h-[600px] md:min-h-[700px] flex items-center">
         {/* Full-bleed background photo */}

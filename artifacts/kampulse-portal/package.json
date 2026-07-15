@@ -76,6 +76,7 @@
   },
   "dependencies": {
     "@types/react-signature-canvas": "^1.0.7",
+    "react-helmet-async": "^3.0.0",
     "react-signature-canvas": "1.0.6"
   }
 }

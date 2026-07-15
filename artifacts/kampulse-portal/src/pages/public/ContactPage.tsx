@@ -1,5 +1,6 @@
 import React from "react";
 import { PublicLayout } from "../../components/layout/PublicLayout";
+import { PageSEO } from "@/components/PageSEO";
 import { MapPin, Phone, Mail, MessageCircle, Clock } from "lucide-react";
 
 const WHATSAPP_URL = "https://wa.me/2347040621103";
@@ -7,6 +8,11 @@ const WHATSAPP_URL = "https://wa.me/2347040621103";
 export function ContactPage() {
   return (
     <PublicLayout>
+      <PageSEO
+        title="Contact Us"
+        description="Get in touch with Kampulse Handling Solutions Ltd. Reach us by phone, email, or WhatsApp. We're based in Delta State, Nigeria and respond within one business day."
+        canonicalPath="/contact"
+      />
       {/* Hero */}
       <section className="py-20 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 max-w-3xl text-center">

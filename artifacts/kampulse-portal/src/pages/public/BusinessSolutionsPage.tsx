@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { PublicLayout } from "../../components/layout/PublicLayout";
+import { PageSEO } from "@/components/PageSEO";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
@@ -177,6 +178,11 @@ function HowWeWorkSection() {
 export function BusinessSolutionsPage() {
   return (
     <PublicLayout>
+      <PageSEO
+        title="Business Solutions — Recruitment, Workforce &amp; Technology"
+        description="Kampulse delivers end-to-end recruitment, staffing, workforce management, technology development, and business consulting solutions for growing Nigerian organisations."
+        canonicalPath="/business-solutions"
+      />
       {/* Hero */}
       <section className="py-20 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 max-w-3xl text-center">
