@@ -527,7 +527,11 @@ function Step4Guarantor({ app, onNext, onBack, token }: { app: any; onNext: () =
       return;
     }
     saveInfo.mutate({ token, data: values }, {
-      onSuccess: () => onNext()
+      onSuccess: async () => {
+        // Refresh the app data so the review step shows up-to-date guarantor info
+        await queryClient.invalidateQueries({ queryKey: getResumeApplicationQueryKey(token) });
+        onNext();
+      }
     });
   };
 
@@ -663,6 +667,7 @@ function Step4Guarantor({ app, onNext, onBack, token }: { app: any; onNext: () =
 // ---------------------------------------------------------
 function Step5Agreement({ app, onNext, onBack, token }: { app: any; onNext: () => void; onBack: () => void; token: string }) {
   const saveInfo = useSaveAgreement();
+  const queryClient = useQueryClient();
   const { toast } = useToast();
   const [agreed, setAgreed] = useState(app.agreementAccepted || false);
   const [fullName, setFullName] = useState("");
@@ -696,7 +701,11 @@ function Step5Agreement({ app, onNext, onBack, token }: { app: any; onNext: () =
         signatureData: signatureData as string
       }
     }, {
-      onSuccess: () => onNext()
+      onSuccess: async () => {
+        // Refresh the app data so the review step reflects the signed status
+        await queryClient.invalidateQueries({ queryKey: getResumeApplicationQueryKey(token) });
+        onNext();
+      }
     });
   };
 
@@ -704,15 +713,35 @@ function Step5Agreement({ app, onNext, onBack, token }: { app: any; onNext: () =
     <div className="bg-card border shadow-sm rounded-xl p-6 md:p-8 animate-in fade-in zoom-in-95 duration-300">
       <h2 className="text-2xl font-bold mb-6 text-center">Employment Agreement</h2>
       
+      {/* ── Employment Agreement document ── */}
       <div className="bg-muted/10 border p-6 rounded-xl max-h-[400px] overflow-y-auto text-sm leading-relaxed mb-8 prose prose-sm max-w-none">
         <h3 className="font-bold text-lg text-center mb-4">KAMPULSE HANDLING SOLUTIONS LTD — EMPLOYMENT AGREEMENT</h3>
         <p>This Agreement is made between Kampulse Handling Solutions Ltd ("The Company") and the Employee named above.</p>
         <ol className="list-decimal pl-5 space-y-2 mt-4">
-          <li><strong>JOB TITLE & DESCRIPTION:</strong> Betshop Cashier — Responsible for cash handling, customer transactions, record keeping, and maintaining shop order at the Osubi Delta State location.</li>
-          <li><strong>SALARY:</strong> Basic salary of ₦70,000 per month, paid at the end of each month via bank transfer.</li>
-          <li><strong>WORKING HOURS:</strong> Monday to Saturday, 8:00 AM – 5:00 PM. Sunday is a rest day. Any work beyond standard hours requires management approval.</li>
-          <li><strong>TRANSPORT ALLOWANCE:</strong> ₦2,000 daily / ₦12,000 weekly, payable alongside monthly salary.</li>
-          <li><strong>OVERTIME:</strong> Approved overtime sessions are compensated at ₦2,000 per session. Overtime must be pre-approved by management.</li>
+          <li>
+            <strong>JOB TITLE & DESCRIPTION:</strong>{" "}
+            {app.jobDetails
+              ? `${app.jobDetails.title}${app.jobDetails.location ? ` — ${app.jobDetails.location}` : ""}${app.jobDetails.description ? `. ${app.jobDetails.description}` : ""}`
+              : app.jobTitle}
+          </li>
+          <li>
+            <strong>SALARY:</strong>{" "}
+            {app.jobDetails?.salary
+              ? `${app.jobDetails.salary}, paid at the end of each month via bank transfer.`
+              : "Salary as agreed, paid at the end of each month via bank transfer."}
+          </li>
+          <li>
+            <strong>WORKING HOURS:</strong>{" "}
+            {app.jobDetails?.workingHours
+              ? `${app.jobDetails.workingHours}. Any work beyond standard hours requires management approval.`
+              : "Working hours as agreed. Any work beyond standard hours requires management approval."}
+          </li>
+          {app.jobDetails?.transportAllowance && (
+            <li><strong>TRANSPORT ALLOWANCE:</strong> {app.jobDetails.transportAllowance}, payable alongside monthly salary.</li>
+          )}
+          {app.jobDetails?.overtime && (
+            <li><strong>OVERTIME:</strong> {app.jobDetails.overtime}. Overtime must be pre-approved by management.</li>
+          )}
           <li><strong>CODE OF CONDUCT:</strong> The Employee shall maintain professional behavior, punctuality, proper dress code, and respect for colleagues, management, and customers at all times. Misconduct including theft, insubordination, or fraud will result in immediate termination.</li>
           <li><strong>CONFIDENTIALITY:</strong> The Employee agrees to keep all business information, customer data, financial records, and company strategies strictly confidential, both during and after employment.</li>
           <li><strong>TERMINATION:</strong> The Company may terminate this agreement with 2 weeks notice or pay in lieu of notice for conduct issues. Immediate termination applies for gross misconduct.</li>

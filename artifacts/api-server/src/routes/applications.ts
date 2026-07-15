@@ -18,7 +18,11 @@ import { sendApplicationSubmittedEmail } from "../lib/email";
 
 const router: IRouter = Router();
 
-function buildApplicationResume(app: typeof applicationsTable.$inferSelect & { jobTitle: string }, docs: typeof documentsTable.$inferSelect[]) {
+function buildApplicationResume(
+  app: typeof applicationsTable.$inferSelect & { jobTitle: string },
+  docs: typeof documentsTable.$inferSelect[],
+  job?: typeof jobsTable.$inferSelect,
+) {
   return {
     id: app.id,
     token: app.token,
@@ -29,6 +33,17 @@ function buildApplicationResume(app: typeof applicationsTable.$inferSelect & { j
     applicationSource: app.applicationSource,
     expectedStartDate: app.expectedStartDate,
     coverLetter: app.coverLetter,
+    jobDetails: job
+      ? {
+          title: job.title,
+          location: job.location,
+          salary: job.salary,
+          workingHours: job.workingHours,
+          transportAllowance: job.transportAllowance ?? null,
+          overtime: job.overtime ?? null,
+          description: job.description ?? null,
+        }
+      : null,
     personalInfo: {
       fullName: app.fullName,
       dateOfBirth: app.dateOfBirth,
@@ -130,7 +145,7 @@ router.get("/applications/resume/:token", async (req, res): Promise<void> => {
   }
   const [job] = await db.select().from(jobsTable).where(eq(jobsTable.id, application.jobId));
   const docs = await db.select().from(documentsTable).where(eq(documentsTable.applicationId, application.id));
-  res.json(buildApplicationResume({ ...application, jobTitle: job?.title ?? "Unknown" }, docs));
+  res.json(buildApplicationResume({ ...application, jobTitle: job?.title ?? "Unknown" }, docs, job));
 });
 
 // PATCH /applications/:token/personal — step 2
@@ -175,7 +190,7 @@ router.patch("/applications/:token/personal", async (req, res): Promise<void> =>
   }).where(eq(applicationsTable.token, params.data.token)).returning();
   const [job] = await db.select().from(jobsTable).where(eq(jobsTable.id, updated.jobId));
   const docs = await db.select().from(documentsTable).where(eq(documentsTable.applicationId, updated.id));
-  res.json(buildApplicationResume({ ...updated, jobTitle: job?.title ?? "Unknown" }, docs));
+  res.json(buildApplicationResume({ ...updated, jobTitle: job?.title ?? "Unknown" }, docs, job));
 });
 
 // PATCH /applications/:token/guarantor — step 4
@@ -217,7 +232,7 @@ router.patch("/applications/:token/guarantor", async (req, res): Promise<void> =
   }).where(eq(applicationsTable.token, params.data.token)).returning();
   const [job] = await db.select().from(jobsTable).where(eq(jobsTable.id, updated.jobId));
   const docs = await db.select().from(documentsTable).where(eq(documentsTable.applicationId, updated.id));
-  res.json(buildApplicationResume({ ...updated, jobTitle: job?.title ?? "Unknown" }, docs));
+  res.json(buildApplicationResume({ ...updated, jobTitle: job?.title ?? "Unknown" }, docs, job));
 });
 
 // PATCH /applications/:token/agreement — step 5
@@ -248,7 +263,7 @@ router.patch("/applications/:token/agreement", async (req, res): Promise<void> =
   }).where(eq(applicationsTable.token, params.data.token)).returning();
   const [job] = await db.select().from(jobsTable).where(eq(jobsTable.id, updated.jobId));
   const docs = await db.select().from(documentsTable).where(eq(documentsTable.applicationId, updated.id));
-  res.json(buildApplicationResume({ ...updated, jobTitle: job?.title ?? "Unknown" }, docs));
+  res.json(buildApplicationResume({ ...updated, jobTitle: job?.title ?? "Unknown" }, docs, job));
 });
 
 // POST /applications/:token/submit — step 6
@@ -279,7 +294,7 @@ router.post("/applications/:token/submit", async (req, res): Promise<void> => {
     sendApplicationSubmittedEmail(updated.email, updated.fullName, updated.token).catch(() => {});
   }
 
-  res.json(buildApplicationResume({ ...updated, jobTitle: job?.title ?? "Unknown" }, docs));
+  res.json(buildApplicationResume({ ...updated, jobTitle: job?.title ?? "Unknown" }, docs, job));
 });
 
 export default router;
