@@ -52,7 +52,7 @@ services:
     runtime: static
     rootDir: .
     buildCommand: npx --yes pnpm@10 install --frozen-lockfile && npx pnpm@10 --filter @workspace/kampulse-portal run build
-    staticPublishPath: artifacts/kampulse-portal/dist
+    staticPublishPath: artifacts/kampulse-portal/dist/public
     headers:
       - path: /*
         name: Cache-Control
