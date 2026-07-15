@@ -32,7 +32,8 @@ const rawOrigin = process.env["CORS_ORIGIN"] ?? process.env["APP_URL"];
 const corsOriginList: (string | RegExp)[] = [];
 
 if (rawOrigin) {
-  corsOriginList.push(rawOrigin);
+  // Support comma-separated list of origins (e.g. "https://kampulseai.com,https://www.kampulseai.com")
+  rawOrigin.split(",").map((o) => o.trim()).filter(Boolean).forEach((o) => corsOriginList.push(o));
 }
 
 // Always permit Replit preview domains and localhost in development/preview.
