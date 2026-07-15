@@ -50,7 +50,6 @@ services:
   - type: web
     name: kampulse-portal
     runtime: static
-    region: frankfurt
     rootDir: .
     buildCommand: npm install -g pnpm@10 && pnpm install --frozen-lockfile && pnpm --filter @workspace/kampulse-portal run build
     staticPublishPath: artifacts/kampulse-portal/dist
