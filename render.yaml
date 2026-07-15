@@ -24,7 +24,7 @@ services:
       - key: SESSION_SECRET
         value: ""
       - key: CORS_ORIGIN
-        value: ""
+        value: https://kampulseai.com,https://www.kampulseai.com
       - key: CLOUDFLARE_R2_ACCOUNT_ID
         value: ""
       - key: CLOUDFLARE_R2_ACCESS_KEY_ID
