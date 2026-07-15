@@ -8,6 +8,7 @@ import { ScrollToTop } from '@/components/ScrollToTop';
 
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { AuthProvider } from '@/hooks/use-auth';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { HomePage } from '@/pages/public/HomePage';
 import { JobsPage } from '@/pages/public/JobsPage';
 import { JobDetailPage } from '@/pages/public/JobDetailPage';
@@ -66,13 +67,15 @@ function App() {
       <ThemeProvider>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <TooltipProvider>
-              <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
-                <ScrollToTop />
-                <Router />
-              </WouterRouter>
-              <Toaster />
-            </TooltipProvider>
+            <ErrorBoundary>
+              <TooltipProvider>
+                <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+                  <ScrollToTop />
+                  <Router />
+                </WouterRouter>
+                <Toaster />
+              </TooltipProvider>
+            </ErrorBoundary>
           </AuthProvider>
         </QueryClientProvider>
       </ThemeProvider>
