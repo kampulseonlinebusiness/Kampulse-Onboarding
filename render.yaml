@@ -66,4 +66,4 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_URL
-        value: ""
+        value: https://kampulse-api.onrender.com
