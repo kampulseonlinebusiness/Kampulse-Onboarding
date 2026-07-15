@@ -117,6 +117,8 @@ export interface Job {
   overtime?: string | null;
   /** @nullable */
   description?: string | null;
+  /** @nullable */
+  photoUrl?: string | null;
   status: JobStatus;
   createdAt?: string;
 }

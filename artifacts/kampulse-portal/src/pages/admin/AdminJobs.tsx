@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { AdminLayout } from "../../components/layout/AdminLayout";
 import {
   useListAdminJobs,
   useCreateAdminJob,
   useUpdateAdminJob,
+  useUploadJobPhoto,
+  useDeleteJobPhoto,
   getListAdminJobsQueryKey,
   getListJobsQueryKey,
   Job,
@@ -19,7 +21,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Loader2, Plus, Pencil, Briefcase } from "lucide-react";
+import { Loader2, Plus, Pencil, Briefcase, Upload, X, ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 
@@ -42,12 +44,117 @@ interface JobFormDialogProps {
   job?: Job | null;
 }
 
+function PhotoUploadZone({
+  currentUrl,
+  pendingFile,
+  onFileSelect,
+  onRemovePending,
+  onRemoveCurrent,
+}: {
+  currentUrl?: string | null;
+  pendingFile: File | null;
+  onFileSelect: (file: File) => void;
+  onRemovePending: () => void;
+  onRemoveCurrent: () => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith("image/")) onFileSelect(file);
+  }, [onFileSelect]);
+
+  const previewSrc = pendingFile ? URL.createObjectURL(pendingFile) : currentUrl ?? null;
+  const hasPhoto = !!previewSrc;
+
+  return (
+    <div className="space-y-2">
+      <label className="text-sm font-medium leading-none">
+        Cover Photo <span className="text-muted-foreground text-xs">(optional — JPEG, PNG, WebP · max 10 MB)</span>
+      </label>
+
+      {hasPhoto ? (
+        <div className="relative rounded-xl overflow-hidden border bg-muted aspect-video">
+          <img
+            src={previewSrc!}
+            alt="Job cover"
+            className="w-full h-full object-cover"
+            onLoad={() => pendingFile && URL.revokeObjectURL(previewSrc!)}
+          />
+          <div className="absolute inset-0 bg-black/0 hover:bg-black/30 transition-colors group flex items-center justify-center gap-2">
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              className="opacity-0 group-hover:opacity-100 transition-opacity gap-1.5 shadow-lg"
+              onClick={() => inputRef.current?.click()}
+            >
+              <Upload className="w-3.5 h-3.5" /> Change
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="destructive"
+              className="opacity-0 group-hover:opacity-100 transition-opacity gap-1.5 shadow-lg"
+              onClick={pendingFile ? onRemovePending : onRemoveCurrent}
+            >
+              <X className="w-3.5 h-3.5" /> Remove
+            </Button>
+          </div>
+          {pendingFile && (
+            <div className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs font-medium px-2 py-0.5 rounded-full shadow">
+              New photo — saved on submit
+            </div>
+          )}
+        </div>
+      ) : (
+        <div
+          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+          onDragLeave={() => setIsDragging(false)}
+          onDrop={handleDrop}
+          onClick={() => inputRef.current?.click()}
+          className={`flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed cursor-pointer py-10 transition-colors
+            ${isDragging ? "border-primary bg-primary/5" : "border-muted-foreground/25 bg-muted/20 hover:border-primary/50 hover:bg-muted/40"}`}
+        >
+          <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+            <ImageIcon className="w-6 h-6 text-muted-foreground" />
+          </div>
+          <div className="text-center">
+            <p className="text-sm font-medium text-foreground">Drop an image here or click to browse</p>
+            <p className="text-xs text-muted-foreground mt-0.5">JPEG, PNG or WebP · up to 10 MB</p>
+          </div>
+        </div>
+      )}
+
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/jpeg,image/jpg,image/png,image/webp"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) onFileSelect(file);
+          e.target.value = "";
+        }}
+      />
+    </div>
+  );
+}
+
 function JobFormDialog({ open, onClose, job }: JobFormDialogProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const createJob = useCreateAdminJob();
   const updateJob = useUpdateAdminJob();
+  const uploadPhoto = useUploadJobPhoto();
+  const deletePhoto = useDeleteJobPhoto();
   const isEditing = !!job;
+
+  const [pendingPhoto, setPendingPhoto] = useState<File | null>(null);
+  const [removeCurrentPhoto, setRemoveCurrentPhoto] = useState(false);
 
   const form = useForm<JobFormValues>({
     resolver: zodResolver(jobFormSchema),
@@ -63,7 +170,6 @@ function JobFormDialog({ open, onClose, job }: JobFormDialogProps) {
     },
   });
 
-  // Reset form when dialog opens with different job
   React.useEffect(() => {
     if (open) {
       form.reset({
@@ -76,12 +182,22 @@ function JobFormDialog({ open, onClose, job }: JobFormDialogProps) {
         description: job?.description || "",
         status: (job?.status as "active" | "closed") || "active",
       });
+      setPendingPhoto(null);
+      setRemoveCurrentPhoto(false);
     }
   }, [open, job]);
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: getListAdminJobsQueryKey() });
     queryClient.invalidateQueries({ queryKey: getListJobsQueryKey() });
+  };
+
+  const handlePhotoStep = async (jobId: number) => {
+    if (pendingPhoto) {
+      await uploadPhoto.mutateAsync({ id: jobId, photo: pendingPhoto });
+    } else if (removeCurrentPhoto && job?.photoUrl) {
+      await deletePhoto.mutateAsync({ id: jobId });
+    }
   };
 
   const onSubmit = (values: JobFormValues) => {
@@ -98,7 +214,8 @@ function JobFormDialog({ open, onClose, job }: JobFormDialogProps) {
 
     if (isEditing && job) {
       updateJob.mutate({ id: job.id, data }, {
-        onSuccess: () => {
+        onSuccess: async (updated) => {
+          await handlePhotoStep(updated.id);
           toast({ title: "Job Updated", description: `"${values.title}" has been updated.` });
           invalidate();
           onClose();
@@ -109,7 +226,8 @@ function JobFormDialog({ open, onClose, job }: JobFormDialogProps) {
       });
     } else {
       createJob.mutate({ data }, {
-        onSuccess: () => {
+        onSuccess: async (created) => {
+          await handlePhotoStep(created.id);
           toast({ title: "Job Created", description: `"${values.title}" is now live.` });
           invalidate();
           onClose();
@@ -121,7 +239,9 @@ function JobFormDialog({ open, onClose, job }: JobFormDialogProps) {
     }
   };
 
-  const isPending = createJob.isPending || updateJob.isPending;
+  const isPending = createJob.isPending || updateJob.isPending || uploadPhoto.isPending || deletePhoto.isPending;
+
+  const currentPhotoUrl = removeCurrentPhoto ? null : job?.photoUrl;
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
@@ -132,6 +252,15 @@ function JobFormDialog({ open, onClose, job }: JobFormDialogProps) {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 pt-2">
+            {/* Photo Upload */}
+            <PhotoUploadZone
+              currentUrl={currentPhotoUrl}
+              pendingFile={pendingPhoto}
+              onFileSelect={(f) => { setPendingPhoto(f); setRemoveCurrentPhoto(false); }}
+              onRemovePending={() => setPendingPhoto(null)}
+              onRemoveCurrent={() => { setRemoveCurrentPhoto(true); setPendingPhoto(null); }}
+            />
+
             <div className="grid md:grid-cols-2 gap-4">
               <FormField control={form.control} name="title" render={({ field }) => (
                 <FormItem className="md:col-span-2">
@@ -287,8 +416,23 @@ export function AdminJobs() {
                 {jobs.map((job, i) => (
                   <tr key={job.id} className={`border-b last:border-0 hover:bg-muted/20 transition-colors ${i % 2 === 0 ? "" : "bg-muted/5"}`}>
                     <td className="p-4">
-                      <div className="font-medium">{job.title}</div>
-                      <div className="text-xs text-muted-foreground mt-0.5 md:hidden">{job.location}</div>
+                      <div className="flex items-center gap-3">
+                        {job.photoUrl ? (
+                          <img
+                            src={job.photoUrl}
+                            alt={job.title}
+                            className="w-10 h-10 rounded-lg object-cover shrink-0 border"
+                          />
+                        ) : (
+                          <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center shrink-0 border">
+                            <Briefcase className="w-4 h-4 text-muted-foreground" />
+                          </div>
+                        )}
+                        <div>
+                          <div className="font-medium">{job.title}</div>
+                          <div className="text-xs text-muted-foreground mt-0.5 md:hidden">{job.location}</div>
+                        </div>
+                      </div>
                     </td>
                     <td className="p-4 text-muted-foreground hidden md:table-cell">{job.location}</td>
                     <td className="p-4 text-muted-foreground hidden lg:table-cell">{job.salary}</td>

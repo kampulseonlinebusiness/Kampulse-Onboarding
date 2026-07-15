@@ -622,6 +622,53 @@ export const useResetPassword = <TError = ErrorType<ErrorResponse>,
     }
 
 
+export const getUploadJobPhotoUrl = (id: number) => `/api/admin/jobs/${id}/photo`
+
+export const uploadJobPhoto = async (id: number, photo: File, options?: RequestInit): Promise<{ photoUrl: string }> => {
+  const formData = new FormData();
+  formData.append("photo", photo);
+  return customFetch<{ photoUrl: string }>(getUploadJobPhotoUrl(id), {
+    ...options,
+    method: 'POST',
+    body: formData,
+  });
+}
+
+export const getUploadJobPhotoMutationOptions = <TError = ErrorType<unknown>, TContext = unknown>(
+  options?: { mutation?: UseMutationOptions<Awaited<ReturnType<typeof uploadJobPhoto>>, TError, { id: number; photo: File }, TContext> }
+): UseMutationOptions<Awaited<ReturnType<typeof uploadJobPhoto>>, TError, { id: number; photo: File }, TContext> => {
+  const mutationKey = ['uploadJobPhoto'];
+  const { mutation: mutationOptions } = options ?? {};
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof uploadJobPhoto>>, { id: number; photo: File }> = ({ id, photo }) => {
+    return uploadJobPhoto(id, photo);
+  };
+  return { mutationKey, mutationFn, ...mutationOptions };
+};
+
+export const useUploadJobPhoto = <TError = ErrorType<unknown>, TContext = unknown>(
+  options?: { mutation?: UseMutationOptions<Awaited<ReturnType<typeof uploadJobPhoto>>, TError, { id: number; photo: File }, TContext> }
+): UseMutationResult<Awaited<ReturnType<typeof uploadJobPhoto>>, TError, { id: number; photo: File }, TContext> => {
+  return useMutation(getUploadJobPhotoMutationOptions(options));
+};
+
+export const getDeleteJobPhotoUrl = (id: number) => `/api/admin/jobs/${id}/photo`
+
+export const deleteJobPhoto = async (id: number, options?: RequestInit): Promise<{ ok: boolean }> => {
+  return customFetch<{ ok: boolean }>(getDeleteJobPhotoUrl(id), {
+    ...options,
+    method: 'DELETE',
+  });
+}
+
+export const useDeleteJobPhoto = <TError = ErrorType<unknown>, TContext = unknown>(
+  options?: { mutation?: UseMutationOptions<Awaited<ReturnType<typeof deleteJobPhoto>>, TError, { id: number }, TContext> }
+): UseMutationResult<Awaited<ReturnType<typeof deleteJobPhoto>>, TError, { id: number }, TContext> => {
+  return useMutation({
+    mutationFn: ({ id }) => deleteJobPhoto(id),
+    ...options?.mutation,
+  });
+};
+
 export const getListAdminJobsUrl = () => {
 
 

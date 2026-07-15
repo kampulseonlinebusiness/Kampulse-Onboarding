@@ -1,4 +1,7 @@
 import { Router, type IRouter } from "express";
+import fs from "fs";
+import path from "path";
+import multer from "multer";
 import { db } from "@workspace/db";
 import {
   applicationsTable,
@@ -23,6 +26,9 @@ import {
 import { requireAuth } from "../middlewares/requireAuth";
 import { generateApplicationPdf } from "../lib/pdf";
 import { sendStatusUpdateEmail } from "../lib/email";
+import { createImageUploader, getFileUrl } from "../lib/uploads";
+
+const jobPhotoUploader = createImageUploader("job-photos");
 
 const router: IRouter = Router();
 
@@ -41,6 +47,7 @@ router.get("/admin/jobs", async (_req, res): Promise<void> => {
     transportAllowance: j.transportAllowance,
     overtime: j.overtime,
     description: j.description,
+    photoUrl: j.photoUrl,
     status: j.status,
     createdAt: j.createdAt,
   })));
@@ -67,8 +74,8 @@ router.post("/admin/jobs", async (req, res): Promise<void> => {
   res.status(201).json({
     id: job.id, title: job.title, location: job.location, salary: job.salary,
     workingHours: job.workingHours, transportAllowance: job.transportAllowance,
-    overtime: job.overtime, description: job.description, status: job.status,
-    createdAt: job.createdAt,
+    overtime: job.overtime, description: job.description, photoUrl: job.photoUrl,
+    status: job.status, createdAt: job.createdAt,
   });
 });
 
@@ -103,9 +110,77 @@ router.patch("/admin/jobs/:id", async (req, res): Promise<void> => {
   res.json({
     id: job.id, title: job.title, location: job.location, salary: job.salary,
     workingHours: job.workingHours, transportAllowance: job.transportAllowance,
-    overtime: job.overtime, description: job.description, status: job.status,
-    createdAt: job.createdAt,
+    overtime: job.overtime, description: job.description, photoUrl: job.photoUrl,
+    status: job.status, createdAt: job.createdAt,
   });
+});
+
+// POST /admin/jobs/:id/photo — upload/replace job cover photo
+router.post("/admin/jobs/:id/photo", (req, res): void => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) {
+    res.status(400).json({ error: "Invalid ID" });
+    return;
+  }
+
+  const upload = jobPhotoUploader.single("photo");
+  upload(req, res, async (err) => {
+    if (err instanceof multer.MulterError) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    if (err) {
+      res.status(400).json({ error: String(err) });
+      return;
+    }
+    if (!req.file) {
+      res.status(400).json({ error: "No photo provided" });
+      return;
+    }
+
+    // Check job exists
+    const [existing] = await db.select({ id: jobsTable.id, photoUrl: jobsTable.photoUrl })
+      .from(jobsTable).where(eq(jobsTable.id, id));
+    if (!existing) {
+      fs.unlinkSync(req.file.path);
+      res.status(404).json({ error: "Job not found" });
+      return;
+    }
+
+    // Delete old photo file if exists
+    if (existing.photoUrl) {
+      try {
+        const oldRelative = existing.photoUrl.replace("/api/uploads/files/", "");
+        const oldPath = path.resolve(process.cwd(), "uploads", oldRelative);
+        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+      } catch { /* ignore */ }
+    }
+
+    const photoUrl = getFileUrl(req.file.path);
+    const [job] = await db.update(jobsTable).set({ photoUrl }).where(eq(jobsTable.id, id)).returning();
+    res.json({ photoUrl: job.photoUrl });
+  });
+});
+
+// DELETE /admin/jobs/:id/photo — remove job cover photo
+router.delete("/admin/jobs/:id/photo", async (req, res): Promise<void> => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
+
+  const [existing] = await db.select({ id: jobsTable.id, photoUrl: jobsTable.photoUrl })
+    .from(jobsTable).where(eq(jobsTable.id, id));
+  if (!existing) { res.status(404).json({ error: "Job not found" }); return; }
+
+  if (existing.photoUrl) {
+    try {
+      const oldRelative = existing.photoUrl.replace("/api/uploads/files/", "");
+      const oldPath = path.resolve(process.cwd(), "uploads", oldRelative);
+      if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+    } catch { /* ignore */ }
+  }
+
+  await db.update(jobsTable).set({ photoUrl: null }).where(eq(jobsTable.id, id));
+  res.json({ ok: true });
 });
 
 // GET /admin/stats

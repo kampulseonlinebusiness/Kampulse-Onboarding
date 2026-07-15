@@ -15,12 +15,13 @@ const FILE_TYPE_DIRS: Record<string, string> = {
   guarantor_passport: "guarantor",
   guarantor_id: "guarantor",
   generated_pdf: "generated-pdf",
+  job_photo: "job-photos",
 };
 
 export function ensureUploadDirs(): void {
   const dirs = [
     "passport", "cv", "certificates", "ids", "proof_of_address",
-    "medical", "guarantor", "generated-pdf"
+    "medical", "guarantor", "generated-pdf", "job-photos"
   ];
   for (const dir of dirs) {
     const full = path.join(UPLOAD_BASE, dir);
@@ -28,6 +29,33 @@ export function ensureUploadDirs(): void {
       fs.mkdirSync(full, { recursive: true });
     }
   }
+}
+
+const IMAGE_ONLY_MIMES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
+export function createImageUploader(subDir: string) {
+  const destDir = path.join(UPLOAD_BASE, subDir);
+  if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
+
+  const storage = multer.diskStorage({
+    destination: (_req, _file, cb) => cb(null, destDir),
+    filename: (_req, file, cb) => {
+      const ext = path.extname(file.originalname);
+      cb(null, `${randomUUID()}${ext}`);
+    },
+  });
+
+  return multer({
+    storage,
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
+    fileFilter: (_req, file, cb) => {
+      if (IMAGE_ONLY_MIMES.includes(file.mimetype)) {
+        cb(null, true);
+      } else {
+        cb(new Error("Only JPEG, PNG, and WebP images are allowed"));
+      }
+    },
+  });
 }
 
 export function getUploadDir(fileType: string): string {
