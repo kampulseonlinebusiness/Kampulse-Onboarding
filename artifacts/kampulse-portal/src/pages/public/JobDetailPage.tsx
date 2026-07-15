@@ -1,11 +1,80 @@
 import React from "react";
+import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "wouter";
 import { PublicLayout } from "../../components/layout/PublicLayout";
 import { PageSEO } from "@/components/PageSEO";
-import { useGetJob } from "@workspace/api-client-react";
+import { useGetJob, Job } from "@workspace/api-client-react";
 import { getGetJobQueryKey } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MapPin, Clock, Banknote, Calendar, ChevronRight, Briefcase } from "lucide-react";
+
+/**
+ * Build a schema.org JobPosting JSON-LD payload from the loaded job record.
+ * Only includes fields for which real data is available — no empty strings.
+ */
+function buildJobPostingSchema(job: Job): Record<string, unknown> {
+  const applyUrl = `https://kampulse.com/apply/start/${job.id}`;
+  const canonicalUrl = `https://kampulse.com/jobs/${job.id}`;
+
+  // Full description: prefer the authored copy; fall back to a generated sentence.
+  const description =
+    job.description ||
+    `Kampulse Handling Solutions Ltd is recruiting for a ${job.title} position in ${job.location}. ` +
+    `Salary: ${job.salary}. Working hours: ${job.workingHours}. ` +
+    (job.transportAllowance ? `Transport allowance: ${job.transportAllowance}. ` : "") +
+    (job.overtime ? `Overtime: ${job.overtime}. ` : "") +
+    `Apply online at ${applyUrl}.`;
+
+  const schema: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "JobPosting",
+    title: job.title,
+    description,
+    datePosted: job.createdAt
+      ? job.createdAt.split("T")[0]          // ISO date portion
+      : new Date().toISOString().split("T")[0],
+    employmentType: "FULL_TIME",
+    directApply: true,
+    url: canonicalUrl,
+    hiringOrganization: {
+      "@type": "Organization",
+      name: "Kampulse Handling Solutions Ltd",
+      sameAs: "https://kampulse.com",
+      logo: "https://kampulse.com/images/kampulse-logo.webp",
+    },
+    jobLocation: {
+      "@type": "Place",
+      address: {
+        "@type": "PostalAddress",
+        // location is typically "City, State" — use the whole string as locality
+        addressLocality: job.location,
+        addressRegion: "Nigeria",
+        addressCountry: "NG",
+      },
+    },
+    applicantLocationRequirements: {
+      "@type": "Country",
+      name: "Nigeria",
+    },
+  };
+
+  // Include salary as a MonetaryAmount only when we can extract a numeric value.
+  // The stored string is typically formatted like "₦85,000/month" or "85000".
+  const salaryMatch = job.salary?.replace(/[,\s]/g, "").match(/(\d+(?:\.\d+)?)/);
+  if (salaryMatch) {
+    schema.baseSalary = {
+      "@type": "MonetaryAmount",
+      currency: "NGN",
+      value: {
+        "@type": "QuantitativeValue",
+        value: parseFloat(salaryMatch[1]),
+        unitText: "MONTH",
+      },
+    };
+  }
+
+  return schema;
+}
 
 export function JobDetailPage() {
   const params = useParams();
@@ -70,6 +139,12 @@ export function JobDetailPage() {
         image={job.photoUrl ?? undefined}
         ogType="article"
       />
+      {/* Google Jobs structured data — JobPosting JSON-LD */}
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(buildJobPostingSchema(job))}
+        </script>
+      </Helmet>
       {/* ── Hero / Cover Photo ── */}
       {job.photoUrl ? (
         <div className="relative w-full aspect-[21/9] overflow-hidden bg-muted">
