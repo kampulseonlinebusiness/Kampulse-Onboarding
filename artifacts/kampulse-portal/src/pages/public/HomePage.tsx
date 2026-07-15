@@ -8,9 +8,9 @@ import {
   ShieldCheck,
   TrendingUp,
   Cpu,
-  Lightbulb,
 } from "lucide-react";
 import { useListJobs } from "@workspace/api-client-react";
+import { StatsSection } from "../../components/StatsSection";
 
 export function HomePage() {
   const { data: jobs } = useListJobs();
@@ -101,36 +101,10 @@ export function HomePage() {
                 digital products, and business support services, we are building
                 solutions that prepare businesses for the future.
               </p>
-              <p className="font-semibold text-foreground text-lg italic mb-8">
+              <p className="font-semibold text-foreground text-lg italic">
                 "We believe sustainable growth happens when talented people meet
                 innovative systems."
               </p>
-              <div className="grid grid-cols-3 gap-4 border-t pt-8">
-                <div>
-                  <div className="text-4xl font-bold text-primary mb-1">500+</div>
-                  <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Professionals Engaged
-                  </div>
-                </div>
-                <div>
-                  <div className="text-4xl font-bold text-primary mb-1">12</div>
-                  <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    States Reached
-                  </div>
-                </div>
-                <div>
-                  <div className="flex items-center gap-1 mb-1">
-                    <Lightbulb className="w-6 h-6 text-primary" />
-                    <span className="text-lg font-bold text-primary">Innovation</span>
-                  </div>
-                  <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider leading-tight">
-                    Driven
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-1 leading-tight">
-                    Building workforce and technology solutions for tomorrow.
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* Nigerian office consultation photo */}
@@ -164,6 +138,9 @@ export function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── Animated Impact Stats ── */}
+      <StatsSection />
 
       {/* ── Why Choose Kampulse ── */}
       <section className="py-20 bg-muted/20 backdrop-blur-sm border-y overflow-hidden">
