@@ -48,6 +48,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = () => {
+    // Revoke the refresh token server-side so it cannot be reused.
+    // This is best-effort: we clear client state regardless of the response.
+    const currentRefreshToken = authState?.refreshToken;
+    if (currentRefreshToken) {
+      fetch(`${import.meta.env.BASE_URL}api/auth/logout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken: currentRefreshToken }),
+      }).catch(() => {
+        // Non-blocking — the token will expire naturally in 7 days even if
+        // this call fails (e.g. network is offline).
+      });
+    }
+
     localStorage.removeItem(AUTH_KEY);
     setAuthState(null);
   };
