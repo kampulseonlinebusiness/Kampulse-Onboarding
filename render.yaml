@@ -13,8 +13,8 @@ services:
     region: frankfurt
     plan: starter
     rootDir: .
-    buildCommand: npx --yes pnpm@10 install --frozen-lockfile && npx pnpm@10 --filter @workspace/api-server run build && npx pnpm@10 --filter @workspace/scripts run seed
-    startCommand: node artifacts/api-server/dist/index.mjs
+    buildCommand: npx --yes pnpm@10 install --frozen-lockfile && npx pnpm@10 --filter @workspace/api-server run build
+    startCommand: npx pnpm@10 --filter @workspace/scripts run seed && node artifacts/api-server/dist/index.mjs
     healthCheckPath: /api/jobs
     envVars:
       - key: NODE_ENV
