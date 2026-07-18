@@ -41,7 +41,7 @@ function buildJobPostingSchema(job: Job): Record<string, unknown> {
       "@type": "Organization",
       name: "Kampulse Handling Solutions Ltd",
       sameAs: "https://kampulse.com",
-      logo: "https://kampulseai.com/icons/icon-512.png",
+      logo: "https://kampulse.com/icons/icon-512.png",
     },
     jobLocation: {
       "@type": "Place",
