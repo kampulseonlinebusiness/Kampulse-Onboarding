@@ -137,7 +137,7 @@ export function JobDetailPage() {
         title={`${job.title} — ${job.location}`}
         description={jobDescription}
         canonicalPath={`/jobs/${job.id}`}
-        image={resolveMediaUrl(job.photoUrl)}
+        image={job.photoUrl ? resolveMediaUrl(job.photoUrl) : undefined}
         ogType="article"
       />
       {/* Google Jobs structured data — JobPosting JSON-LD */}

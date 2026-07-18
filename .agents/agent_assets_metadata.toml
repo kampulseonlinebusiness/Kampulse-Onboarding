@@ -6,3 +6,9 @@ id = "Y4PaYfjNaPMeqWFJZIKtr"
 uri = "file://kampulse-db-export.sql"
 type = "unspecified"
 title = "Kampulse Database Export (SQL)"
+
+[[outputs]]
+id = "sVN9zqujWe50xTY9Z8oOV"
+uri = "file://artifacts/kampulse-portal/public/images/og-banner.png"
+type = "image"
+title = "Kampulse OG Banner (1200×630)"

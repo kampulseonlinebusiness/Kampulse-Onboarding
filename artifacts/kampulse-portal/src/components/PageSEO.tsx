@@ -2,7 +2,7 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 
 const SITE_NAME = "Kampulse Handling Solutions Ltd";
-const DEFAULT_IMAGE = "https://kampulse.com/icons/icon-512.png";
+const DEFAULT_IMAGE = "https://kampulse.com/images/og-banner.png";
 const BASE_URL = "https://kampulse.com";
 
 interface PageSEOProps {
