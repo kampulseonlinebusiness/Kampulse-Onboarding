@@ -286,6 +286,84 @@ router.get("/admin/applications", async (req, res): Promise<void> => {
   });
 });
 
+// GET /admin/applications/export — download filtered applicants as CSV
+router.get("/admin/applications/export", async (req, res): Promise<void> => {
+  const VALID_EXPORT_STATUSES = new Set(["pending", "under_review", "approved", "rejected"]);
+  const { status, search } = req.query as { status?: string; search?: string };
+  if (status !== undefined && !VALID_EXPORT_STATUSES.has(status)) {
+    res.status(400).json({ error: `Invalid status value: "${status}"` });
+    return;
+  }
+  if (search !== undefined && typeof search !== "string") {
+    res.status(400).json({ error: "Invalid search parameter" });
+    return;
+  }
+
+  const conditions = [];
+  if (status) {
+    conditions.push(eq(applicationsTable.status, status as typeof applicationsTable.status.enumValues[number]));
+  }
+  if (search) {
+    conditions.push(
+      sql`(${applicationsTable.fullName} ILIKE ${`%${search}%`} OR ${applicationsTable.email} ILIKE ${`%${search}%`} OR ${applicationsTable.phone} ILIKE ${`%${search}%`})`
+    );
+  }
+
+  const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+  const rows = await db
+    .select({
+      id: applicationsTable.id,
+      fullName: applicationsTable.fullName,
+      email: applicationsTable.email,
+      phone: applicationsTable.phone,
+      jobId: applicationsTable.jobId,
+      status: applicationsTable.status,
+      createdAt: applicationsTable.createdAt,
+      computerLiteracy: applicationsTable.computerLiteracy,
+    })
+    .from(applicationsTable)
+    .where(whereClause)
+    .orderBy(desc(applicationsTable.createdAt));
+
+  const jobIds = [...new Set(rows.map(r => r.jobId))];
+  const jobs = jobIds.length > 0 ? await db.select().from(jobsTable).where(
+    sql`${jobsTable.id} = ANY(${sql.raw(`ARRAY[${jobIds.join(",")}]::int[]`)})`
+  ) : [];
+  const jobMap = new Map(jobs.map(j => [j.id, j.title]));
+
+  // Prefix formula-injection triggers so spreadsheets don't execute them
+  const FORMULA_PREFIXES = new Set(["=", "+", "-", "@", "\t", "\r"]);
+  const sanitize = (v: string | null | undefined): string => {
+    if (v == null) return "";
+    let s = String(v);
+    if (FORMULA_PREFIXES.has(s[0])) s = `'${s}`;
+    // Wrap in quotes if value contains comma, double-quote, or newline
+    if (s.includes(",") || s.includes('"') || s.includes("\n")) {
+      return `"${s.replace(/"/g, '""')}"`;
+    }
+    return s;
+  };
+
+  const header = ["Name", "Email", "Phone", "Position Applied", "Status", "Application Date", "Computer Literacy"];
+  const csvRows = rows.map(r => [
+    sanitize(r.fullName),
+    sanitize(r.email),
+    sanitize(r.phone),
+    sanitize(jobMap.get(r.jobId) ?? "Unknown"),
+    sanitize(r.status?.replace(/_/g, " ")),
+    sanitize(r.createdAt ? new Date(r.createdAt).toISOString().split("T")[0] : ""),
+    sanitize(r.computerLiteracy),
+  ].join(","));
+
+  const csv = [header.join(","), ...csvRows].join("\r\n");
+
+  const filename = `applicants-${new Date().toISOString().split("T")[0]}.csv`;
+  res.setHeader("Content-Type", "text/csv; charset=utf-8");
+  res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+  res.send(csv);
+});
+
 // GET /admin/applications/:id
 router.get("/admin/applications/:id", async (req, res): Promise<void> => {
   const params = GetAdminApplicationParams.safeParse(req.params);
