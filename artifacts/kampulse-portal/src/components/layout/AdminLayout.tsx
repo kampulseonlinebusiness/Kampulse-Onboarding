@@ -5,6 +5,7 @@ import { useGetMe, useAdminLogout, getGetMeQueryKey } from "@workspace/api-clien
 import { LayoutDashboard, Users, LogOut, Menu, X, Briefcase, KeyRound } from "lucide-react";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { Button } from "@/components/ui/button";
+import { KampulseLogo } from "@/components/KampulseLogo";
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading, logout, user } = useAuth();
@@ -58,11 +59,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       {/* Mobile Header */}
       <div className="md:hidden flex items-center justify-between p-4 bg-sidebar/90 backdrop-blur border-b border-sidebar-border text-sidebar-foreground">
         <div className="flex items-center gap-2">
-          <img
-            src="/images/kampulse-logo.webp"
-            alt="Kampulse Handling Solutions Ltd"
-            className="h-16 w-auto object-contain rounded-xl drop-shadow-lg"
-          />
+          <KampulseLogo className="h-9 w-auto drop-shadow-lg" />
         </div>
         <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -76,11 +73,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
         } md:block w-full md:w-64 bg-sidebar/90 backdrop-blur border-r border-sidebar-border text-sidebar-foreground flex flex-col`}
       >
         <div className="hidden md:flex px-6 py-5 items-center justify-center border-b border-sidebar-border/50">
-          <img
-            src="/images/kampulse-logo.webp"
-            alt="Kampulse Handling Solutions Ltd"
-            className="h-28 w-auto object-contain rounded-xl drop-shadow-lg"
-          />
+          <KampulseLogo className="w-44 h-auto drop-shadow-lg" />
         </div>
 
         <div className="p-4 flex flex-col gap-1 flex-1">

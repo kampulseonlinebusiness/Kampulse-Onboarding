@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { KampulseLogo } from "@/components/KampulseLogo";
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email"),
@@ -69,11 +70,7 @@ export function AdminLogin() {
         </a>
       <div className="bg-card border rounded-2xl shadow-xl overflow-hidden">
         <div className="p-8 text-center border-b bg-muted/10">
-          <img
-            src="/images/kampulse-logo.webp"
-            alt="Kampulse Handling Solutions Ltd"
-            className="h-36 w-auto mx-auto mb-4 rounded-xl object-contain drop-shadow-xl"
-          />
+          <KampulseLogo className="h-12 w-auto mx-auto mb-4 drop-shadow-xl" />
           <h1 className="text-2xl font-bold tracking-tight mb-1">Kampulse Admin</h1>
           <p className="text-muted-foreground text-sm">Sign in to manage the portal</p>
         </div>

@@ -1,9 +1,10 @@
 import React from "react";
 import { Link, useLocation } from "wouter";
-import { Briefcase, Menu, X, ArrowRight, MapPin, Mail, Phone } from "lucide-react";
+import { Menu, X, ArrowRight, MapPin, Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { KampulseLogo } from "@/components/KampulseLogo";
 
 export function PublicLayout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
@@ -22,14 +23,7 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 h-24 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-1 group">
-            <img
-              src="/images/kampulse-logo.webp"
-              alt="Kampulse Handling Solutions Ltd"
-              fetchPriority="high"
-              decoding="async"
-              width="160" height="80"
-              className="h-16 sm:h-20 w-auto object-contain group-hover:scale-105 transition-transform rounded-xl drop-shadow-lg"
-            />
+            <KampulseLogo className="h-10 sm:h-12 w-auto group-hover:scale-105 transition-transform drop-shadow-lg" />
           </Link>
 
           {/* Desktop Nav */}
@@ -93,13 +87,7 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
           {/* Brand column */}
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-5">
-              <img
-                src="/images/kampulse-logo.webp"
-                alt="Kampulse Handling Solutions Ltd"
-                loading="lazy"
-                decoding="async"
-                className="h-24 w-auto object-contain rounded-xl drop-shadow-lg"
-              />
+              <KampulseLogo className="h-10 w-auto drop-shadow-lg" />
             </Link>
             <p className="text-muted-foreground text-sm leading-relaxed">
               Building careers, empowering businesses, and creating innovative solutions for the future of work.

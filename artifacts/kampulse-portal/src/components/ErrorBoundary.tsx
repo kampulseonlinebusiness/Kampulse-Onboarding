@@ -1,6 +1,7 @@
 import React, { Component, ErrorInfo, ReactNode } from "react";
 import { AlertTriangle, Home, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { KampulseLogo } from "@/components/KampulseLogo";
 
 interface Props {
   children: ReactNode;
@@ -45,14 +46,7 @@ export class ErrorBoundary extends Component<Props, State> {
         <div className="max-w-md w-full text-center space-y-6">
           {/* Logo */}
           <div className="flex justify-center mb-2">
-            <img
-              src="/images/kampulse-logo.webp"
-              alt="Kampulse"
-              className="h-12 w-auto object-contain"
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).style.display = "none";
-              }}
-            />
+            <KampulseLogo className="h-10 w-auto" />
           </div>
 
           {/* Icon */}
