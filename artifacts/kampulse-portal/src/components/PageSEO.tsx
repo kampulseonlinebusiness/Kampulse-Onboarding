@@ -2,8 +2,8 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 
 const SITE_NAME = "Kampulse Handling Solutions Ltd";
-const DEFAULT_IMAGE = "https://kampulse.com/images/kampulse-logo.webp";
-const BASE_URL = "https://kampulse.com";
+const DEFAULT_IMAGE = "https://kampulseai.com/icons/icon-512.png";
+const BASE_URL = "https://kampulseai.com";
 
 interface PageSEOProps {
   /** Page-specific title. Will be rendered as "Title — Kampulse Handling Solutions". */
