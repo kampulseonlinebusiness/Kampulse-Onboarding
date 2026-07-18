@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, Eye, Download } from "lucide-react";
+import { Search, Eye, Download, FileDown } from "lucide-react";
 import { format } from "date-fns";
 
 const AUTH_KEY = "kampulse_auth";
@@ -28,6 +28,7 @@ export function AdminApplications() {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [isExporting, setIsExporting] = useState(false);
+  const [isExportingFull, setIsExportingFull] = useState(false);
 
   // Simple debounce for search
   React.useEffect(() => {
@@ -35,15 +36,18 @@ export function AdminApplications() {
     return () => clearTimeout(timer);
   }, [search]);
 
-  const handleExport = async () => {
-    setIsExporting(true);
+  const runExport = async (full: boolean) => {
+    const setter = full ? setIsExportingFull : setIsExporting;
+    setter(true);
     try {
       const params = new URLSearchParams();
       if (statusFilter !== "all") params.set("status", statusFilter);
       if (debouncedSearch) params.set("search", debouncedSearch);
+      if (full) params.set("full", "true");
 
       const token = getAuthToken();
-      const response = await fetch(`/api/admin/applications/export?${params.toString()}`, {
+      const apiBase = import.meta.env.VITE_API_URL ?? "";
+      const response = await fetch(`${apiBase}/api/admin/applications/export?${params.toString()}`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
 
@@ -53,7 +57,8 @@ export function AdminApplications() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `applicants-${new Date().toISOString().split("T")[0]}.csv`;
+      const date = new Date().toISOString().split("T")[0];
+      a.download = full ? `applicants-full-${date}.csv` : `applicants-${date}.csv`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -61,9 +66,12 @@ export function AdminApplications() {
     } catch (err) {
       console.error("Export error:", err);
     } finally {
-      setIsExporting(false);
+      setter(false);
     }
   };
+
+  const handleExport = () => runExport(false);
+  const handleFullExport = () => runExport(true);
 
   const { data, isLoading } = useListAdminApplications(
     statusFilter !== "all" ? { status: statusFilter as any } : {},
@@ -98,15 +106,28 @@ export function AdminApplications() {
           <h1 className="text-3xl font-bold tracking-tight mb-2">Applications</h1>
           <p className="text-muted-foreground">Manage and review all job applications.</p>
         </div>
-        <Button
-          variant="outline"
-          className="gap-2 self-start md:self-auto"
-          onClick={handleExport}
-          disabled={isExporting}
-        >
-          <Download className="w-4 h-4" />
-          {isExporting ? "Exporting…" : "Export CSV"}
-        </Button>
+        <div className="flex items-center gap-2 self-start md:self-auto">
+          <Button
+            variant="outline"
+            className="gap-2"
+            onClick={handleExport}
+            disabled={isExporting || isExportingFull}
+            title="Download summary CSV (7 columns)"
+          >
+            <Download className="w-4 h-4" />
+            {isExporting ? "Exporting…" : "Export CSV"}
+          </Button>
+          <Button
+            variant="outline"
+            className="gap-2"
+            onClick={handleFullExport}
+            disabled={isExporting || isExportingFull}
+            title="Download full CSV with all personal, guarantor and emergency-contact fields"
+          >
+            <FileDown className="w-4 h-4" />
+            {isExportingFull ? "Exporting…" : "Export Full CSV"}
+          </Button>
+        </div>
       </div>
 
       <div className="bg-card border rounded-xl shadow-sm overflow-hidden flex flex-col">

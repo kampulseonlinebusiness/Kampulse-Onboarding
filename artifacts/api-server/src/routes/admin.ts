@@ -287,9 +287,12 @@ router.get("/admin/applications", async (req, res): Promise<void> => {
 });
 
 // GET /admin/applications/export — download filtered applicants as CSV
+// Query params: status, search, full=true (expands to all personal/guarantor/emergency fields)
 router.get("/admin/applications/export", async (req, res): Promise<void> => {
   const VALID_EXPORT_STATUSES = new Set(["pending", "under_review", "approved", "rejected"]);
-  const { status, search } = req.query as { status?: string; search?: string };
+  const { status, search, full } = req.query as { status?: string; search?: string; full?: string };
+  const isFullExport = full === "true";
+
   if (status !== undefined && !VALID_EXPORT_STATUSES.has(status)) {
     res.status(400).json({ error: `Invalid status value: "${status}"` });
     return;
@@ -311,20 +314,23 @@ router.get("/admin/applications/export", async (req, res): Promise<void> => {
 
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-  const rows = await db
-    .select({
-      id: applicationsTable.id,
-      fullName: applicationsTable.fullName,
-      email: applicationsTable.email,
-      phone: applicationsTable.phone,
-      jobId: applicationsTable.jobId,
-      status: applicationsTable.status,
-      createdAt: applicationsTable.createdAt,
-      computerLiteracy: applicationsTable.computerLiteracy,
-    })
-    .from(applicationsTable)
-    .where(whereClause)
-    .orderBy(desc(applicationsTable.createdAt));
+  // Fetch rows — full export selects every column; summary selects 8
+  const rows = await (isFullExport
+    ? db.select().from(applicationsTable).where(whereClause).orderBy(desc(applicationsTable.createdAt))
+    : db
+        .select({
+          id: applicationsTable.id,
+          fullName: applicationsTable.fullName,
+          email: applicationsTable.email,
+          phone: applicationsTable.phone,
+          jobId: applicationsTable.jobId,
+          status: applicationsTable.status,
+          createdAt: applicationsTable.createdAt,
+          computerLiteracy: applicationsTable.computerLiteracy,
+        })
+        .from(applicationsTable)
+        .where(whereClause)
+        .orderBy(desc(applicationsTable.createdAt)));
 
   const jobIds = [...new Set(rows.map(r => r.jobId))];
   const jobs = jobIds.length > 0 ? await db.select().from(jobsTable).where(
@@ -334,31 +340,112 @@ router.get("/admin/applications/export", async (req, res): Promise<void> => {
 
   // Prefix formula-injection triggers so spreadsheets don't execute them
   const FORMULA_PREFIXES = new Set(["=", "+", "-", "@", "\t", "\r"]);
-  const sanitize = (v: string | null | undefined): string => {
+  const sanitize = (v: string | number | boolean | null | undefined | Date): string => {
     if (v == null) return "";
-    let s = String(v);
+    let s = v instanceof Date ? v.toISOString() : String(v);
     if (FORMULA_PREFIXES.has(s[0])) s = `'${s}`;
-    // Wrap in quotes if value contains comma, double-quote, or newline
     if (s.includes(",") || s.includes('"') || s.includes("\n")) {
       return `"${s.replace(/"/g, '""')}"`;
     }
     return s;
   };
 
-  const header = ["Name", "Email", "Phone", "Position Applied", "Status", "Application Date", "Computer Literacy"];
-  const csvRows = rows.map(r => [
-    sanitize(r.fullName),
-    sanitize(r.email),
-    sanitize(r.phone),
-    sanitize(jobMap.get(r.jobId) ?? "Unknown"),
-    sanitize(r.status?.replace(/_/g, " ")),
-    sanitize(r.createdAt ? new Date(r.createdAt).toISOString().split("T")[0] : ""),
-    sanitize(r.computerLiteracy),
-  ].join(","));
+  let header: string[];
+  let csvRows: string[];
+  let filename: string;
+
+  if (isFullExport) {
+    header = [
+      // Summary
+      "ID", "Name", "Email", "Phone", "Position Applied", "Status", "Application Date",
+      // Application details
+      "Application Source", "Expected Start Date", "Cover Letter",
+      // Personal info
+      "Date of Birth", "Gender", "Nationality", "State of Origin", "LGA",
+      "Marital Status", "Address", "Computer Literacy",
+      // Next of kin
+      "Next of Kin Name", "Next of Kin Relationship", "Next of Kin Phone", "Next of Kin Address",
+      // Emergency contact
+      "Emergency Contact Name", "Emergency Contact Relationship",
+      "Emergency Contact Phone", "Emergency Contact Address",
+      // Guarantor
+      "Guarantor Name", "Guarantor Address", "Guarantor Occupation", "Guarantor Place of Work",
+      "Guarantor Phone", "Guarantor Email", "Guarantor Relationship", "Guarantor Years Known",
+      "Guarantor ID Type", "Guarantor ID Number", "Guarantor ID Issue Date", "Guarantor ID Expiry Date",
+      // Witness
+      "Witness Name", "Witness Address", "Witness Phone",
+      // Agreement
+      "Declaration Accepted", "Agreement Accepted", "Agreement Signed At",
+    ];
+    csvRows = (rows as typeof rows & { id: number }[]).map((r: any) => [
+      sanitize(r.id),
+      sanitize(r.fullName),
+      sanitize(r.email),
+      sanitize(r.phone),
+      sanitize(jobMap.get(r.jobId) ?? "Unknown"),
+      sanitize(r.status?.replace(/_/g, " ")),
+      sanitize(r.createdAt ? new Date(r.createdAt).toISOString().split("T")[0] : ""),
+      // Application
+      sanitize(r.applicationSource),
+      sanitize(r.expectedStartDate),
+      sanitize(r.coverLetter),
+      // Personal
+      sanitize(r.dateOfBirth),
+      sanitize(r.gender),
+      sanitize(r.nationality),
+      sanitize(r.stateOfOrigin),
+      sanitize(r.lga),
+      sanitize(r.maritalStatus),
+      sanitize(r.address),
+      sanitize(r.computerLiteracy),
+      // Next of kin
+      sanitize(r.nextOfKinName),
+      sanitize(r.nextOfKinRelationship),
+      sanitize(r.nextOfKinPhone),
+      sanitize(r.nextOfKinAddress),
+      // Emergency
+      sanitize(r.emergencyContactName),
+      sanitize(r.emergencyContactRelationship),
+      sanitize(r.emergencyContactPhone),
+      sanitize(r.emergencyContactAddress),
+      // Guarantor
+      sanitize(r.guarantorFullName),
+      sanitize(r.guarantorAddress),
+      sanitize(r.guarantorOccupation),
+      sanitize(r.guarantorPlaceOfWork),
+      sanitize(r.guarantorPhone),
+      sanitize(r.guarantorEmail),
+      sanitize(r.guarantorRelationship),
+      sanitize(r.guarantorYearsKnown),
+      sanitize(r.guarantorIdType),
+      sanitize(r.guarantorIdNumber),
+      sanitize(r.guarantorIdIssueDate),
+      sanitize(r.guarantorIdExpiryDate),
+      // Witness
+      sanitize(r.witnessName),
+      sanitize(r.witnessAddress),
+      sanitize(r.witnessPhone),
+      // Agreement
+      sanitize(r.declarationAccepted),
+      sanitize(r.agreedToTerms),
+      sanitize(r.agreementSignedAt ? new Date(r.agreementSignedAt).toISOString().split("T")[0] : ""),
+    ].join(","));
+    filename = `applicants-full-${new Date().toISOString().split("T")[0]}.csv`;
+  } else {
+    header = ["Name", "Email", "Phone", "Position Applied", "Status", "Application Date", "Computer Literacy"];
+    csvRows = rows.map(r => [
+      sanitize(r.fullName),
+      sanitize(r.email),
+      sanitize(r.phone),
+      sanitize(jobMap.get(r.jobId) ?? "Unknown"),
+      sanitize(r.status?.replace(/_/g, " ")),
+      sanitize(r.createdAt ? new Date(r.createdAt).toISOString().split("T")[0] : ""),
+      sanitize((r as any).computerLiteracy),
+    ].join(","));
+    filename = `applicants-${new Date().toISOString().split("T")[0]}.csv`;
+  }
 
   const csv = [header.join(","), ...csvRows].join("\r\n");
-
-  const filename = `applicants-${new Date().toISOString().split("T")[0]}.csv`;
   res.setHeader("Content-Type", "text/csv; charset=utf-8");
   res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
   res.send(csv);
